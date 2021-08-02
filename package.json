@@ -5,6 +5,7 @@
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.1.0",
     "@polymer/polymer": "3.2.0",
+    "@types/leaflet": "^1.5.23",
     "@vaadin/flow-frontend": "./target/flow-frontend",
     "@vaadin/form": "./target/flow-frontend/form",
     "@vaadin/router": "1.7.4",
@@ -53,6 +54,8 @@
     "@vaadin/vaadin-upload": "21.0.0-alpha13",
     "@vaadin/vaadin-virtual-list": "21.0.0-alpha13",
     "construct-style-sheets-polyfill": "2.4.16",
+    "leaflet": "^1.7.1",
+    "line-awesome": "1.3.0",
     "lit": "2.0.0-rc.1"
   },
   "devDependencies": {
@@ -89,6 +92,7 @@
       "@polymer/iron-icon": "3.0.1",
       "@polymer/iron-list": "3.1.0",
       "@polymer/polymer": "3.2.0",
+      "@types/leaflet": "^1.5.23",
       "@vaadin/router": "1.7.4",
       "@vaadin/vaadin-accordion": "21.0.0-alpha13",
       "@vaadin/vaadin-app-layout": "21.0.0-alpha13",
@@ -135,6 +139,8 @@
       "@vaadin/vaadin-upload": "21.0.0-alpha13",
       "@vaadin/vaadin-virtual-list": "21.0.0-alpha13",
       "construct-style-sheets-polyfill": "2.4.16",
+      "leaflet": "^1.7.1",
+      "line-awesome": "1.3.0",
       "lit": "2.0.0-rc.1"
     },
     "devDependencies": {
@@ -162,6 +168,6 @@
       "workbox-precaching": "6.1.0",
       "workbox-webpack-plugin": "6.1.0"
     },
-    "hash": "732bab371dec73c0c97e8b97b815095666d7d1f3c5c61b169d46ba69f09ab1a6"
+    "hash": "e865940dcbbbd773db6aeadb11ca93a6c5defafeb9f22b1ba281d36f0c2a4112"
   }
 }

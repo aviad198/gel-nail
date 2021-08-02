@@ -1,5 +1,6 @@
 package com.example.application.views.nailsalons;
 
+import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Tag;
@@ -7,10 +8,10 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.template.Id;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @PageTitle("Nail Salons")
@@ -23,6 +24,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
 
     @Id
     private Select<String> sortBy;
+    private TextField filterText = new TextField();
 
     public NailSalonsView() {
         addClassNames("nail-salons-view", "flex", "flex-col", "h-full");
