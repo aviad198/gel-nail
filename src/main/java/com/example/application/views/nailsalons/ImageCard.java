@@ -12,6 +12,7 @@ import com.vaadin.flow.component.template.Id;
 @Tag("image-card")
 public class ImageCard extends LitTemplate {
 
+
     @Id
     private Image image;
 

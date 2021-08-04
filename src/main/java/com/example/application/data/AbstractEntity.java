@@ -1,16 +1,17 @@
 package com.example.application.data;
 
+import com.vaadin.fusion.Nonnull;
+
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
-import com.vaadin.fusion.Nonnull;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     @Nonnull
     private Integer id;
 
@@ -20,6 +21,10 @@ public abstract class AbstractEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public boolean isPersisted() {
+        return id != null;
     }
 
     @Override

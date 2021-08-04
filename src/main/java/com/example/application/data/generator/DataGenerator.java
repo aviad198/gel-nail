@@ -1,23 +1,21 @@
 package com.example.application.data.generator;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-
-import com.example.application.data.service.SampleFoodProductRepository;
-import com.example.application.data.entity.SampleFoodProduct;
-import com.example.application.data.service.UserRepository;
-import com.example.application.data.entity.User;
-import java.util.Collections;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.application.data.Role;
-
-import java.time.LocalDateTime;
-
+import com.example.application.data.entity.SampleFoodProduct;
+import com.example.application.data.entity.User;
+import com.example.application.data.service.SampleFoodProductRepository;
+import com.example.application.data.service.UserRepository;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.vaadin.artur.exampledata.DataType;
 import org.vaadin.artur.exampledata.ExampleDataGenerator;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
 
 @SpringComponent
 public class DataGenerator {
@@ -61,7 +59,6 @@ public class DataGenerator {
                     "https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=128&h=128&q=80");
             admin.setRoles(Collections.singleton(Role.ADMIN));
             userRepository.save(admin);
-
             logger.info("Generated demo data");
         };
     }
