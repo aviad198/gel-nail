@@ -6,8 +6,12 @@ import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.littemplate.LitTemplate;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.component.textfield.TextField;
@@ -30,7 +34,10 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
 
     @Id
     private Select<String> sortBy;
-    private TextField filterText = new TextField();
+    private TextField location = new TextField();
+    private TextField businessName = new TextField();
+    private ComboBox<String> services = new ComboBox<>();
+    private Button startSearch = new Button("Search");
     private CompanyService companyService;
     List<Company> companyList;
     public NailSalonsView(CompanyService companyService) {
@@ -38,8 +45,12 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         sortBy.setItems("Popularity", "Newest first", "Oldest first");
         sortBy.setValue("Popularity");
         configureFilter();
-        add(filterText);
-        
+        HorizontalLayout layoutSearch = new HorizontalLayout();
+        layoutSearch.add(businessName, services, location, startSearch);
+        layoutSearch.setHeightFull();
+        layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
+        add(layoutSearch);
+
         this.companyService = companyService;
         companyList = companyService.findAll();
 
@@ -49,13 +60,21 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     }
 
     private void configureFilter() {
-        filterText.setPlaceholder("Where?...");
-        filterText.setClearButtonVisible(true);
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
-        filterText.addValueChangeListener(e -> updateList());
+        location.setLabel("Location");
+        location.setPlaceholder("Where?...");
+        location.setClearButtonVisible(true);
+        location.setValueChangeMode(ValueChangeMode.LAZY);
+        location.addValueChangeListener(e -> updateList());
+
+        services.setItems("Option one", "Option two");
+        services.setClearButtonVisible(true);
+        services.setLabel("Services");
+
+        businessName.setLabel("Business name");
+
     }
 
     private void updateList() {
-        companyList = companyService.findAll(filterText.getValue());
+        companyList = companyService.findAll(location.getValue());
     }
 }
