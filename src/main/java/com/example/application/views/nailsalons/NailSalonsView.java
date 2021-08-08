@@ -9,9 +9,11 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.component.textfield.TextField;
@@ -40,23 +42,28 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private Button startSearch = new Button("Search");
     private CompanyService companyService;
     List<Company> companyList;
+    FormLayout layoutSearch = new FormLayout();
     public NailSalonsView(CompanyService companyService) {
         addClassNames("nail-salons-view", "flex", "flex-col", "h-full");
         sortBy.setItems("Popularity", "Newest first", "Oldest first");
         sortBy.setValue("Popularity");
         configureFilter();
         HorizontalLayout layoutSearch = new HorizontalLayout();
+        VerticalLayout layout = new VerticalLayout();
         layoutSearch.add(businessName, services, location, startSearch);
-        layoutSearch.setHeightFull();
         layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
-        add(layoutSearch);
+
+        layout.add(layoutSearch);
 
         this.companyService = companyService;
         companyList = companyService.findAll();
-
         for(Company company : companyList){
-            add(new ImageCard(company.getName(), company.getMainImageURL()));
+            ImageCard item = new ImageCard(company.getName(), company.getMainImageURL());
+            layout.add(item);
         }
+        add(layout);
+
+
     }
 
     private void configureFilter() {
