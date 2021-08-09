@@ -41,6 +41,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private ComboBox<String> services = new ComboBox<>();
     private Button startSearch = new Button("Search");
     private CompanyService companyService;
+    private ImageGrid imageGrid;
     List<Company> companyList;
     FormLayout layoutSearch = new FormLayout();
     public NailSalonsView(CompanyService companyService) {
@@ -48,22 +49,18 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         sortBy.setItems("Popularity", "Newest first", "Oldest first");
         sortBy.setValue("Popularity");
         configureFilter();
+
         HorizontalLayout layoutSearch = new HorizontalLayout();
         VerticalLayout layout = new VerticalLayout();
         layoutSearch.add(businessName, services, location, startSearch);
         layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
 
         layout.add(layoutSearch);
-
         this.companyService = companyService;
         companyList = companyService.findAll();
-        for(Company company : companyList){
-            ImageCard item = new ImageCard(company.getName(), company.getMainImageURL());
-            layout.add(item);
-        }
+        imageGrid = new ImageGrid(companyList);
+        layout.add(imageGrid);
         add(layout);
-
-
     }
 
     private void configureFilter() {
@@ -83,5 +80,6 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
 
     private void updateList() {
         companyList = companyService.findAll(location.getValue());
+        imageGrid.UpdateGrid(companyList);
     }
 }
