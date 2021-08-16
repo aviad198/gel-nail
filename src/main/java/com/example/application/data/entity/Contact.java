@@ -20,11 +20,11 @@ public class Contact extends AbstractEntity{
 
     @NotNull
     @NotEmpty
-    private String firstName = (user == null) ? "" : user.getName();
+    private String firstName = (user == null) ? "" : user.getFirstName();
 
     @NotNull
     @NotEmpty
-    private String lastName = (user == null) ? "" :user.getSurname();
+    private String lastName = (user == null) ? "" :user.getLastName();
 
     @ManyToOne
     @JoinColumn(name = "company_id")

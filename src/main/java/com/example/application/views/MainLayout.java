@@ -1,42 +1,39 @@
 package com.example.application.views;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.example.application.data.entity.User;
+import com.example.application.security.AuthenticatedUser;
+import com.example.application.views.addressform.AddressFormView;
+import com.example.application.views.cares.CaresView;
+import com.example.application.views.checkoutform.CheckoutFormView;
+import com.example.application.views.creditcardform.CreditCardFormView;
+import com.example.application.views.dashboard.DashboardView;
+import com.example.application.views.map.MapView;
+import com.example.application.views.nailsalons.NailSalonsView;
+import com.example.application.views.personform.PersonFormView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
-import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
-import com.example.application.views.MainLayout;
-import com.example.application.views.nailsalons.NailSalonsView;
-import com.example.application.views.map.MapView;
-import com.example.application.views.personform.PersonFormView;
-import com.example.application.views.addressform.AddressFormView;
-import com.example.application.views.creditcardform.CreditCardFormView;
-import com.example.application.views.cares.CaresView;
-import com.example.application.views.checkoutform.CheckoutFormView;
-import com.example.application.views.dashboard.DashboardView;
-import com.example.application.views.login.LoginView;
-import com.vaadin.flow.component.avatar.Avatar;
-import com.example.application.data.entity.User;
-import com.example.application.security.AuthenticatedUser;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
-import com.vaadin.flow.component.contextmenu.ContextMenu;
-import com.vaadin.flow.component.html.Anchor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -100,7 +97,7 @@ public class MainLayout extends AppLayout {
         Optional<User> maybeUser = authenticatedUser.get();
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
-            Avatar avatar = new Avatar(user.getName(), user.getProfilePictureUrl());
+            Avatar avatar = new Avatar(user.getFirstName(), user.getProfilePictureUrl());
             avatar.addClassNames("ms-auto", "me-m");
             ContextMenu userMenu = new ContextMenu(avatar);
             userMenu.setOpenOnClick(true);
@@ -112,6 +109,10 @@ public class MainLayout extends AppLayout {
             Anchor loginLink = new Anchor("login", "Sign in");
             loginLink.addClassNames("ms-auto", "me-m");
             layout.add(loginLink);
+
+            Anchor registerLink = new Anchor("register-form", "Register");
+            registerLink.addClassNames("ms-auto", "me-m");
+            layout.add(registerLink);
         }
 
         return layout;

@@ -3,19 +3,34 @@ package com.example.application.data.entity;
 import com.example.application.data.AbstractEntity;
 import com.example.application.data.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 public class User extends AbstractEntity {
+
+    @NotEmpty(message = "Must enter a Username")
+    @Length(message = "username length must be at least 4 character and max 10", min = 4, max = 10)
+    @NotNull(message = "Must enter username")
     private String username;
-    private String name;
-    private String surname;
+    @Pattern(message = "Invalid character for name. must be only letters", regexp = "^[A-Za-z]*$")
+    @Length(message = "Invalid name length", max = 15)
+    @NotEmpty(message = "Must fill first name")
+    private String firstName;
+    @Pattern(message = "Invalid character for name. must be only letters", regexp = "^[A-Za-z]*$")
+    @Length(message = "Invalid name length", max = 15)
+    @NotEmpty(message = "Must fill first name")
+    private String lastName;
     @JsonIgnore
+    @Length(min = 8, max = 64)
     private String hashedPassword;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -25,11 +40,13 @@ public class User extends AbstractEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Contact> contact = new LinkedList<>();
 
-//TO-DO not empty
     @Email
-//    @NotNull
-//    @NotEmpty
+    @NotNull
+    @NotEmpty
     private String email;
+
+
+
     public User() {
     }
 
@@ -41,14 +58,14 @@ public class User extends AbstractEntity {
     public void setUsername(String username) {
         this.username = username;
     }
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
     }
-    public String getSurname() {return surname;}
-    public void setSurname(String surname) {this.surname = surname;}
+    public String getLastName() {return lastName;}
+    public void setLastName(String surname) {this.lastName = surname;}
     public String getHashedPassword() {
         return hashedPassword;
     }
