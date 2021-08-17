@@ -1,6 +1,7 @@
 package com.example.application.data.service;
 
 import com.example.application.data.entity.Company;
+import com.example.application.data.entity.Service;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,11 +14,11 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             "where lower(c.name) like lower(concat('%', :searchTerm, '%')) " +
             "or lower(c.rating) like lower(concat('%', :searchTerm, '%'))")
     List<Company> search(@Param("searchTerm") String searchTerm);
-    /*
+
     @Query("select s from Service s " +
             "where s.name =:service")
     List<Service> searchService(@Param("service") String service);
-    */
+
 
 
 }
