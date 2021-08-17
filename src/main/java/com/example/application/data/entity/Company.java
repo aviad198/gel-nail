@@ -21,10 +21,10 @@ public class Company extends AbstractEntity {
 
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
     private List<Contact> customers = new LinkedList<>();
-
-    @OneToMany(mappedBy = "servics", fetch = FetchType.EAGER)
+    /*
+    @OneToMany(mappedBy = "services", fetch = FetchType.EAGER)
     private List<Service> servics = new LinkedList<>();
-
+*/
 
     public Company() {
     }
@@ -57,11 +57,11 @@ public class Company extends AbstractEntity {
     public List<Contact> getCustomers() {
         return customers;
     }
-
+/*
     public List<Service> getService() {
         return servics;
     }
-
+*/
     public void setRating(int rating){this.rating = rating;}
 
     public int getRating(){return rating;}
