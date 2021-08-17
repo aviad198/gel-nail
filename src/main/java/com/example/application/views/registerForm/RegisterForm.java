@@ -1,7 +1,9 @@
 package com.example.application.views.registerForm;
 
+import com.example.application.data.Role;
 import com.example.application.data.entity.User;
 import com.example.application.data.service.UserService;
+import com.example.application.security.SecurityConfiguration;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -25,6 +27,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.method.P;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Collections;
 
 @PageTitle("Register Form")
 @Route(value = "register-form" ,layout = MainLayout.class)
@@ -53,20 +60,24 @@ public class RegisterForm extends VerticalLayout {
 
     public RegisterForm(UserService userService) {
         addClassName("register-form");
-        //connect all fields to entity + validations
-        binder.bindInstanceFields(this);
-        //shows status at error message span
-        binder.setStatusLabel(errorMessage);
+
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
         add(errorMessage);
         clearForm();
 
+        //shows status at error message span
+        binder.setStatusLabel(errorMessage);
+
         cancel.addClickListener(e -> clearForm());
         save.addClickListener(e -> submitForm(userService));
 
         binder.forField(hashedPassword).withValidator(this::passwordValidator);
+
+        //connect all fields to entity + validations
+        binder.bindInstanceFields(this);
+
         //if second password insert start compare to first
         hashedPassword2.addValueChangeListener(e -> {
             // The user has modified the second field, now we can validate and show errors.
@@ -83,6 +94,15 @@ public class RegisterForm extends VerticalLayout {
             User user = new User();
             // Run validators and write the values to the bean
             binder.writeBean(user);
+            //configure security to save password TO-DO(should be smoother)
+            SecurityConfiguration securityConfiguration = new SecurityConfiguration();
+           //set hash password
+            user.setHashedPassword(securityConfiguration.passwordEncoder().encode(user.getHashedPassword()));
+            //set role defualt TO-DO option to be admin of buisness
+            user.setRoles(Collections.singleton(Role.USER));
+            //set profile picture - TO-DO change profile picture
+            user.setProfilePictureUrl("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=128&h=128&q=80");
+
             // Call backend to store the data
             userService.update(user);
             //test
@@ -115,10 +135,11 @@ public class RegisterForm extends VerticalLayout {
         }
     }
 
-    private void configureBinder() {
-    }
 
     private ValidationResult passwordValidator(String pass1, ValueContext valueContext) {
+        if (pass1 == null || pass1.length() < 8) {
+            return ValidationResult.error("Password should be at least 8 characters long");
+        }
         if (!enablePasswordValidation) {
             // user hasn't visited the field yet, so don't validate just yet, but next time.
             enablePasswordValidation = true;
@@ -131,6 +152,7 @@ public class RegisterForm extends VerticalLayout {
     }
 
     private void clearForm() {
+
         binder.setBean(new User());
     }
 
@@ -141,12 +163,9 @@ public class RegisterForm extends VerticalLayout {
     private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
 
-
-
         //style error message
         errorMessage.getStyle().set("color", "var(--lumo-error-text-color)");
         errorMessage.getStyle().set("padding", "15px 0");
-
 
 
         username.setRequired(true);
