@@ -13,10 +13,11 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             "where lower(c.name) like lower(concat('%', :searchTerm, '%')) " +
             "or lower(c.rating) like lower(concat('%', :searchTerm, '%'))")
     List<Company> search(@Param("searchTerm") String searchTerm);
-
+    /*
     @Query("select s from Service s " +
             "where s.name =:service")
     List<Service> searchService(@Param("service") String service);
+    */
 
 
 }
