@@ -58,9 +58,9 @@ public class Company extends AbstractEntity {
         return customers;
     }
 
-//    public List<Service> getService() {
-//        return servics;
-//    }
+    public List<Service> getService() {
+        return services;
+    }
 
     public void setRating(int rating){this.rating = rating;}
 
