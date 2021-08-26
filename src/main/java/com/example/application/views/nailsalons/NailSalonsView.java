@@ -1,7 +1,9 @@
 package com.example.application.views.nailsalons;
 
 import com.example.application.data.entity.Company;
+import com.example.application.data.entity.TypeService;
 import com.example.application.data.service.CompanyService;
+import com.example.application.data.service.ServiceService;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
@@ -38,17 +40,19 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private Select<String> sortBy;
     private TextField location = new TextField();
     private TextField businessName = new TextField();
-    private ComboBox<String> services = new ComboBox<>();
+    private ComboBox<TypeService> services = new ComboBox<>();
     private Button startSearch = new Button("Search");
     private CompanyService companyService;
+    private ServiceService serviceService;
     private ImageGrid imageGrid;
     List<Company> companyList;
+    List<TypeService> serviceList;
     FormLayout layoutSearch = new FormLayout();
-    public NailSalonsView(CompanyService companyService) {
+    public NailSalonsView(CompanyService companyService, ServiceService serviceService) {
         addClassNames("nail-salons-view", "flex", "flex-col", "h-full");
         sortBy.setItems("Popularity", "Newest first", "Oldest first");
         sortBy.setValue("Popularity");
-        configureFilter();
+        configureFilter(serviceService);
 
         HorizontalLayout layoutSearch = new HorizontalLayout();
         VerticalLayout layout = new VerticalLayout();
@@ -57,20 +61,24 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
 
         layout.add(layoutSearch);
         this.companyService = companyService;
+        this.serviceService = serviceService;
         companyList = companyService.findAll();
         imageGrid = new ImageGrid(companyList);
         layout.add(imageGrid);
         add(layout);
     }
 
-    private void configureFilter() {
+    private void configureFilter(ServiceService serviceService) {
         location.setLabel("Location");
         location.setPlaceholder("Where?...");
         location.setClearButtonVisible(true);
         location.setValueChangeMode(ValueChangeMode.LAZY);
         location.addValueChangeListener(e -> updateList());
 
-        services.setItems("Option one", "Option two");
+        serviceList = serviceService.findAll();
+        services.setItems(serviceList);
+        services.setItemLabelGenerator(TypeService::getName);
+
         services.setClearButtonVisible(true);
         services.setLabel("Services");
 
