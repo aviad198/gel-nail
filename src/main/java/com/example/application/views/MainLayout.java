@@ -3,7 +3,7 @@ package com.example.application.views;
 import com.example.application.data.entity.User;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.addressform.AddressFormView;
-import com.example.application.views.cares.CaresView;
+import com.example.application.views.cares.CompanyView;
 import com.example.application.views.checkoutform.CheckoutFormView;
 import com.example.application.views.creditcardform.CreditCardFormView;
 import com.example.application.views.dashboard.DashboardView;
@@ -158,7 +158,7 @@ public class MainLayout extends AppLayout {
 
                 new MenuItemInfo("Credit Card Form", "", CreditCardFormView.class), //
 
-                new MenuItemInfo("Cares", "la la-columns", CaresView.class), //
+                new MenuItemInfo("Cares", "la la-columns", CompanyView.class), //
 
                 new MenuItemInfo("Checkout Form", "", CheckoutFormView.class), //
 
