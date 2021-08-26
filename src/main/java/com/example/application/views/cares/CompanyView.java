@@ -2,83 +2,76 @@ package com.example.application.views.cares;
 
 import java.util.Optional;
 
-import com.example.application.data.entity.SampleFoodProduct;
-import com.example.application.data.service.SampleFoodProductService;
+import com.example.application.data.entity.Company;
+import com.example.application.data.service.CompanyService;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.UI;
+import com.example.application.views.nailsalons.NailSalonsView;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.example.application.views.MainLayout;
+
 import javax.annotation.security.PermitAll;
-import java.io.ByteArrayOutputStream;
-import org.springframework.web.util.UriUtils;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.upload.Upload;
-import java.nio.charset.StandardCharsets;
+
 import com.vaadin.flow.component.html.Image;
-import java.util.Base64;
-import elemental.json.Json;
-import com.vaadin.flow.data.renderer.TemplateRenderer;
-import com.vaadin.flow.component.textfield.TextField;
 
-@PageTitle("Cares")
-@Route(value = "Cares/:sampleFoodProductID?/:action?(edit)", layout = MainLayout.class)
-@PermitAll
-public class CaresView extends Div implements BeforeEnterObserver {
+@PageTitle("Book a Care")
+@Route(value = "Company/:companyID?/:action?(edit)", layout = MainLayout.class)
+@AnonymousAllowed
+public class CompanyView extends Div implements BeforeEnterObserver {
 
-    private final String SAMPLEFOODPRODUCT_ID = "sampleFoodProductID";
-    private final String SAMPLEFOODPRODUCT_EDIT_ROUTE_TEMPLATE = "Cares/%d/edit";
+    private final String COMPANY_ID = "companyID";
+    private final String COMPANY_EDIT_ROUTE_TEMPLATE = "Company/%d/edit";
 
-    private Grid<SampleFoodProduct> grid = new Grid<>(SampleFoodProduct.class, false);
+    //private Grid<SampleFoodProduct> grid = new Grid<>(SampleFoodProduct.class, false);
 
-    private Upload image;
-    private Image imagePreview;
-    private TextField name;
-    private TextField eanCode;
+    //    private Upload image;
+    private Image companyImage;
 
-    private Button cancel = new Button("Cancel");
-    private Button save = new Button("Save");
 
-    private BeanValidationBinder<SampleFoodProduct> binder;
+//    private Button cancel = new Button("Cancel");
+//    private Button save = new Button("Save");
 
-    private SampleFoodProduct sampleFoodProduct;
+    private BeanValidationBinder<Company> binder;
 
-    private SampleFoodProductService sampleFoodProductService;
+    private Company company;
 
-    public CaresView(@Autowired SampleFoodProductService sampleFoodProductService) {
-        this.sampleFoodProductService = sampleFoodProductService;
+    private Label companyName;
+
+    private CompanyService companyService;
+
+    private CompanyHeader companyHeader;
+
+    public CompanyView(@Autowired CompanyService companyService) {
+        this.companyService = companyService;
         addClassNames("cares-view", "flex", "flex-col", "h-full");
 
         // Create UI
-        SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setSizeFull();
+        VerticalLayout verticalLayout = new VerticalLayout();
 
-        createGridLayout(splitLayout);
-        createEditorLayout(splitLayout);
-
-        add(splitLayout);
+        createHeader(verticalLayout);
+        createScheduleLayout(verticalLayout);
+        //createEditorLayout(splitLayout);
+        //add(companyImage);
+        add(verticalLayout);
 
         // Configure Grid
-        TemplateRenderer<SampleFoodProduct> imageRenderer = TemplateRenderer.<SampleFoodProduct>of(
+        /*TemplateRenderer<SampleFoodProduct> imageRenderer = TemplateRenderer.<SampleFoodProduct>of(
                 "<span style='border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px'><img style='max-width: 100%' src='[[item.image]]' /></span>")
                 .withProperty("image", SampleFoodProduct::getImage);
         grid.addColumn(imageRenderer).setHeader("Image").setWidth("96px").setFlexGrow(0);
@@ -98,16 +91,17 @@ public class CaresView extends Div implements BeforeEnterObserver {
                         .navigate(String.format(SAMPLEFOODPRODUCT_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
             } else {
                 clearForm();
-                UI.getCurrent().navigate(CaresView.class);
+                UI.getCurrent().navigate(CompanyView.class);
             }
-        });
+        });*/
 
         // Configure Form
-        binder = new BeanValidationBinder<>(SampleFoodProduct.class);
+        binder = new BeanValidationBinder<>(Company.class);
 
         // Bind fields. This where you'd define e.g. validation rules
 
-        binder.bindInstanceFields(this);
+        //     binder.bindInstanceFields(this);
+/*
 
         attachImageUpload(image, imagePreview);
 
@@ -128,34 +122,56 @@ public class CaresView extends Div implements BeforeEnterObserver {
                 clearForm();
                 refreshGrid();
                 Notification.show("SampleFoodProduct details stored.");
-                UI.getCurrent().navigate(CaresView.class);
+                UI.getCurrent().navigate(CompanyView.class);
             } catch (ValidationException validationException) {
                 Notification.show("An exception happened while trying to store the sampleFoodProduct details.");
             }
         });
+*/
 
     }
 
+    private void createHeader(VerticalLayout verticalLayout) {
+//        companyImage = new Image();
+//        companyImage.setVisible(true);
+//        companyImage.setMaxHeight(550, Unit.PIXELS);
+//        companyName = new Label();
+//        verticalLayout.add(companyImage);
+//        verticalLayout.add(companyName);
+        companyHeader = new CompanyHeader();
+        verticalLayout.add(companyHeader);
+
+    }
+
+
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<Integer> sampleFoodProductId = event.getRouteParameters().getInteger(SAMPLEFOODPRODUCT_ID);
-        if (sampleFoodProductId.isPresent()) {
-            Optional<SampleFoodProduct> sampleFoodProductFromBackend = sampleFoodProductService
-                    .get(sampleFoodProductId.get());
-            if (sampleFoodProductFromBackend.isPresent()) {
-                populateForm(sampleFoodProductFromBackend.get());
+        Optional<Integer> companyID = event.getRouteParameters().getInteger(COMPANY_ID);
+        if (companyID.isPresent()) {
+            Optional<Company> companyFromBackend = companyService
+                    .get(companyID.get());
+            if (companyFromBackend.isPresent()) {
+                populatePage(companyFromBackend.get());
+                //populateHeader();
             } else {
-                Notification.show(String.format("The requested sampleFoodProduct was not found, ID = %d",
-                        sampleFoodProductId.get()), 3000, Notification.Position.BOTTOM_START);
+                Notification.show(String.format("The requested Company was not found, ID = %d",
+                        companyID.get()), 3000, Notification.Position.BOTTOM_START);
                 // when a row is selected but the data is no longer available,
                 // refresh grid
-                refreshGrid();
-                event.forwardTo(CaresView.class);
+                //refreshGrid();
+                event.forwardTo(NailSalonsView.class);
             }
         }
     }
 
-    private void createEditorLayout(SplitLayout splitLayout) {
+    private void populateHeader() {
+        this.companyImage.setSrc(company.getMainImageURL());
+        companyImage.setVisible(true);
+        companyName.setText(company.getName());
+    }
+
+
+/*    private void createEditorLayout(SplitLayout splitLayout) {
         Div editorLayoutDiv = new Div();
         editorLayoutDiv.setClassName("flex flex-col");
         editorLayoutDiv.setWidth("400px");
@@ -183,9 +199,9 @@ public class CaresView extends Div implements BeforeEnterObserver {
         createButtonLayout(editorLayoutDiv);
 
         splitLayout.addToSecondary(editorLayoutDiv);
-    }
+    }*/
 
-    private void createButtonLayout(Div editorLayoutDiv) {
+/*    private void createButtonLayout(Div editorLayoutDiv) {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.setClassName("w-full flex-wrap bg-contrast-5 py-s px-l");
         buttonLayout.setSpacing(true);
@@ -193,17 +209,47 @@ public class CaresView extends Div implements BeforeEnterObserver {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonLayout.add(save, cancel);
         editorLayoutDiv.add(buttonLayout);
-    }
+    }*/
 
-    private void createGridLayout(SplitLayout splitLayout) {
+    private void createScheduleLayout(VerticalLayout verticalLayout) {
         Div wrapper = new Div();
         wrapper.setId("grid-wrapper");
         wrapper.setWidthFull();
-        splitLayout.addToPrimary(wrapper);
-        wrapper.add(grid);
+        verticalLayout.add(wrapper);
+        String[] dayOfWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sut"};
+        HorizontalLayout her = new HorizontalLayout();
+
+        for (String day : dayOfWeek) {
+            VerticalLayout ver = new VerticalLayout();
+            her.add(ver);
+            Label dayLab = new Label(day);
+            ver.add(dayLab);
+            for (int i = 7; i < 25; i++) {
+                Button time = new Button(i + ":00");
+               /* time.addClickListener(e -> {
+                    try {
+                        if (this.company == null) {
+                            this.company = new Company();
+                        }
+                        binder.writeBean(this.sampleFoodProduct);
+                        this.sampleFoodProduct.setImage(imagePreview.getSrc());
+
+                        sampleFoodProductService.update(this.sampleFoodProduct);
+                        clearForm();
+                        refreshGrid();
+                        Notification.show("SampleFoodProduct details stored.");
+                        UI.getCurrent().navigate(CompanyView.class);
+                    } catch (ValidationException validationException) {
+                        Notification.show("An exception happened while trying to store the sampleFoodProduct details.");
+                    }
+                });*/
+                ver.add(time);
+            }
+        }
+        wrapper.add(her);
     }
 
-    private void attachImageUpload(Upload upload, Image preview) {
+   /* private void attachImageUpload(Upload upload, Image preview) {
         ByteArrayOutputStream uploadBuffer = new ByteArrayOutputStream();
         upload.setAcceptedFileTypes("image/*");
         upload.setReceiver((fileName, mimeType) -> {
@@ -219,25 +265,28 @@ public class CaresView extends Div implements BeforeEnterObserver {
             uploadBuffer.reset();
         });
         preview.setVisible(false);
-    }
+    }*/
 
-    private void refreshGrid() {
+  /*  private void refreshGrid() {
         grid.select(null);
         grid.getLazyDataView().refreshAll();
-    }
+    }*/
 
     private void clearForm() {
-        populateForm(null);
+        populatePage(null);
     }
 
-    private void populateForm(SampleFoodProduct value) {
-        this.sampleFoodProduct = value;
-        binder.readBean(this.sampleFoodProduct);
-        this.imagePreview.setVisible(value != null);
-        if (value == null) {
-            this.imagePreview.setSrc("");
+    private void populatePage(Company company) {
+        this.company = company;
+        binder.readBean(this.company);
+        if (company == null) {
+            //this.companyImage.setSrc("");
         } else {
-            this.imagePreview.setSrc(value.getImage());
+            companyImage = new Image();
+            this.companyImage.setSrc(company.getMainImageURL());
+            companyImage.setVisible(true);
+        companyHeader.setCompanyHeader(company.getMainImageURL(), "no text yet", company.getName(),"no sub yet", "no desc yet", "5");
+
         }
 
     }
