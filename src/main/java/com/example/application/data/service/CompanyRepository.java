@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CompanyRepository extends JpaRepository<Company, Long> {
+public interface CompanyRepository extends JpaRepository<Company, Integer> {
 
     @Query("select c from Company c " +
             "where lower(c.name) like lower(concat('%', :searchTerm, '%')) " +
