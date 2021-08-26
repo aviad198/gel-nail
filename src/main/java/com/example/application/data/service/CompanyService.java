@@ -1,13 +1,15 @@
 package com.example.application.data.service;
 
 import com.example.application.data.entity.Company;
+import com.example.application.data.entity.SampleAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.vaadin.artur.helpers.CrudService;
 
 import java.util.List;
 
 @Service
-public class CompanyService {
+public class CompanyService extends CrudService<Company, Integer> {
 
     private CompanyRepository companyRepository;
 
@@ -26,5 +28,11 @@ public class CompanyService {
             return companyRepository.search(stringFilter);
         }
     }
+
+    @Override
+    protected CompanyRepository getRepository() {
+        return companyRepository;
+    }
+
 
 }
