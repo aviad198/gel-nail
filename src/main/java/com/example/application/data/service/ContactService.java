@@ -2,6 +2,7 @@ package com.example.application.data.service;
 
 import com.example.application.data.entity.Company;
 import com.example.application.data.entity.Contact;
+import com.example.application.data.entity.TypeService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,11 +18,14 @@ public class ContactService {
     private static final Logger LOGGER = Logger.getLogger(ContactService.class.getName());
     private ContactRepository contactRepository;
     private CompanyRepository companyRepository;
+    private ServiceRepository serviceRepository;
 
     public ContactService(ContactRepository contactRepository,
-                          CompanyRepository companyRepository) {
+                          CompanyRepository companyRepository,
+                          ServiceRepository serviceRepository) {
         this.contactRepository = contactRepository;
         this.companyRepository = companyRepository;
+        this.serviceRepository = serviceRepository;
     }
 
     public List<Contact> findAll() {
@@ -76,6 +80,26 @@ public class ContactService {
                                 contact.setEmail(email);
                                 return contact;
                             }).collect(Collectors.toList()));
+        }
+
+        List<Company> companyList = companyRepository.findAll();
+        if(serviceRepository.count()==0){
+
+            TypeService typeService1 = new TypeService("Polish", 40, 15, (Integer) companyList.get(0).getId(),companyList.get(0));
+            TypeService typeService2 = new TypeService("manicure gel", 120, 70, (Integer) companyList.get(0).getId(),companyList.get(0));
+            TypeService typeService3 = new TypeService("medical manicure", 230, 90, (Integer)companyList.get(1).getId(),companyList.get(1));
+            TypeService typeService4 = new TypeService("manicure gel", 130, 70, (Integer)companyList.get(2).getId(),companyList.get(2));
+            TypeService typeService5 = new TypeService("medical manicure", 220, 90, (Integer)companyList.get(2).getId(),companyList.get(2));
+            TypeService typeService6 = new TypeService("Polish", 30, 15, (Integer)companyList.get(1).getId(),companyList.get(1));
+            TypeService typeService7 = new TypeService("Polish", 50, 15, (Integer)companyList.get(2).getId(),companyList.get(2));
+
+            serviceRepository.save(typeService1);
+            serviceRepository.save(typeService2);
+            serviceRepository.save(typeService3);
+            serviceRepository.save(typeService4);
+            serviceRepository.save(typeService5);
+            serviceRepository.save(typeService6);
+            serviceRepository.save(typeService7);
         }
     }
 }

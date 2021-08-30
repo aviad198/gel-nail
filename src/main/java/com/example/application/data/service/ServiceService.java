@@ -3,21 +3,53 @@ package com.example.application.data.service;
 import com.example.application.data.entity.TypeService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceService{
+
     private ServiceRepository serviceRepository;
     private CompanyRepository companyRepository;
 
     public List<TypeService> findAll() {
-        return serviceRepository.findAll();
+        return (List<TypeService>) serviceRepository.findAll().stream()
+                .distinct()
+                .collect(Collectors.toList());
     }
+    public List<TypeService> findByName(String stringFilter) {
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return (List<TypeService>) serviceRepository.findAll();
+        } else {
+            return serviceRepository.search(stringFilter);
+        }
+
+    }
+
 
     public ServiceService(ServiceRepository serviceRepository,
                           CompanyRepository companyRepository) {
         this.serviceRepository = serviceRepository;
         this.companyRepository = companyRepository;
+    }
+
+    public void addService(TypeService typeService){
+        serviceRepository.save(typeService);
+    }
+
+    public void updateService(Integer idService ,TypeService typeService){
+        serviceRepository.save(typeService);
+    }
+
+    public void deleteService(Integer idService){
+        serviceRepository.deleteById(idService);
+    }
+
+    @PostConstruct
+    private void postConstruct() {
+
+
     }
 /*
     @PostConstruct
