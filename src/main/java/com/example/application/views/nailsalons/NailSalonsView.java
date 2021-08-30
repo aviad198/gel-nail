@@ -83,6 +83,9 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         services.setLabel("Services");
 
         businessName.setLabel("Business name");
+        businessName.setClearButtonVisible(true);
+        businessName.setValueChangeMode(ValueChangeMode.LAZY);
+        businessName.addValueChangeListener(e -> updateList());
 
     }
 
