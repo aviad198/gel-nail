@@ -1,14 +1,24 @@
 package com.example.application.views.cares;
 
+import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import com.example.application.data.entity.Company;
+import com.example.application.data.entity.User;
 import com.example.application.data.service.CompanyService;
 
+import com.example.application.data.service.UserRepository;
+import com.example.application.data.service.UserService;
+import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.nailsalons.NailSalonsView;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -16,6 +26,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -43,6 +54,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
     //    private Upload image;
     private Image companyImage;
 
+    private ScheduleDialog scheduleDialog;
 
 //    private Button cancel = new Button("Cancel");
 //    private Button save = new Button("Save");
@@ -57,8 +69,14 @@ public class CompanyView extends Div implements BeforeEnterObserver {
 
     private CompanyHeader companyHeader;
 
-    public CompanyView(@Autowired CompanyService companyService) {
+    private AuthenticatedUser authenticatedUser;
+
+    private UserService userService;
+
+    public CompanyView(@Autowired CompanyService companyService, AuthenticatedUser authenticatedUser, UserService userService) {
         this.companyService = companyService;
+        this.authenticatedUser = authenticatedUser;
+        this.userService = userService;
         addClassNames("cares-view", "flex", "flex-col", "h-full");
 
         // Create UI
@@ -219,33 +237,63 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         String[] dayOfWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sut"};
         HorizontalLayout her = new HorizontalLayout();
 
-        for (String day : dayOfWeek) {
-            VerticalLayout ver = new VerticalLayout();
-            her.add(ver);
-            Label dayLab = new Label(day);
-            ver.add(dayLab);
-            for (int i = 7; i < 25; i++) {
-                Button time = new Button(i + ":00");
-               /* time.addClickListener(e -> {
-                    try {
-                        if (this.company == null) {
-                            this.company = new Company();
-                        }
-                        binder.writeBean(this.sampleFoodProduct);
-                        this.sampleFoodProduct.setImage(imagePreview.getSrc());
+        DateTimePicker dateTimePicker = new DateTimePicker();
+        dateTimePicker.setLabel("Appointment day and time");
+        dateTimePicker.setValue(LocalDateTime.of(LocalDate.now(),LocalTime.of(LocalTime.now().getHour()+1, 0)));
+        dateTimePicker.setHelperText("Must be within 60 days from today");
+        //if now is before 7AM min time would be 7AM else - current time
+        dateTimePicker.setMin(LocalDateTime.now().isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0))) ? LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0)) : LocalDateTime.now());
+        //no more then 60 days ahead
+        dateTimePicker.setMax(LocalDateTime.now().plusDays(60));
 
-                        sampleFoodProductService.update(this.sampleFoodProduct);
-                        clearForm();
-                        refreshGrid();
-                        Notification.show("SampleFoodProduct details stored.");
-                        UI.getCurrent().navigate(CompanyView.class);
-                    } catch (ValidationException validationException) {
-                        Notification.show("An exception happened while trying to store the sampleFoodProduct details.");
+        Button time = new Button("Book!");
+
+        time.addClickListener(e -> {
+            Optional<User> authUser = authenticatedUser.get();
+            if (authUser.isPresent()) {
+                User user = authUser.get();
+                System.out.println("Users: = " + userService.findAll());
+                System.out.println("Users: = " + companyService.findAll());
+                scheduleDialog.setTime(dateTimePicker.getValue());
+                scheduleDialog.setUser(user);
+                scheduleDialog.open();
+            } else {
+                Notification.show("Must signing to Book appointment");
+            }
+
+
+        });
+        her.add(dateTimePicker);
+        her.add(time);
+ /*       Button prevWeek = new Button("<");
+        Button nextWeek = new Button(">");
+        her.add(prevWeek);
+        //dayLayout.add(nextWeek);
+        int i = 0;
+        for (String day : dayOfWeek) {
+            VerticalLayout dayLayout = new VerticalLayout();
+            her.add(dayLayout);
+            LocalDate bookingDate = new LocalDate(LocalDate.now().getYear(), LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth());
+            Label dayLab = new Label(day +" "+LocalDate.now().getDayOfMonth()+"."+LocalDate.now().getMonth());
+            dayLayout.add(dayLab);
+            for (int i = 7; i < 25; i++) {
+                Button time = new Button(LocalTime.of(i,0).toString());
+                if(!company.isBooked(i)){
+                time.addClickListener(e -> {
+                    Optional<User> maybeUser = authenticatedUser.get();
+                    if (maybeUser.isPresent()) {
+                        User user = maybeUser.get();
+                        scheduleDialog.setTime(time.getText());
+                        scheduleDialog.setUser(user);
+                        scheduleDialog.open();
                     }
-                });*/
-                ver.add(time);
+
+
+                });}
+                dayLayout.add(time);
             }
         }
+        her.add(nextWeek);*/
         wrapper.add(her);
     }
 
@@ -285,8 +333,8 @@ public class CompanyView extends Div implements BeforeEnterObserver {
             companyImage = new Image();
             this.companyImage.setSrc(company.getMainImageURL());
             companyImage.setVisible(true);
-        companyHeader.setCompanyHeader(company.getMainImageURL(), "no text yet", company.getName(),"no sub yet", "no desc yet", "5");
-
+            companyHeader.setCompanyHeader(company.getMainImageURL(), "no text yet", company.getName(), "no sub yet", "no desc yet", "5");
+            scheduleDialog = new ScheduleDialog(company);
         }
 
     }

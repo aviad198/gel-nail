@@ -19,24 +19,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.binder.ValidationResult;
-import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.binder.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.hibernate.service.spi.ServiceException;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.access.method.P;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 
 @PageTitle("Register Form")
 @Route(value = "register-form" ,layout = MainLayout.class)
 @AnonymousAllowed
-@Uses(Icon.class)
 public class RegisterForm extends VerticalLayout {
 
     private TextField username = new TextField("Username");
@@ -51,14 +44,16 @@ public class RegisterForm extends VerticalLayout {
     private Button save = new Button("Save");
     Span errorMessage = new Span();
 
+    private UserService userService;
     /**
      * Flag for disabling first run for password validation
      */
     private boolean enablePasswordValidation;
 
-    private BeanValidationBinder<User> binder = new BeanValidationBinder<User>(User.class);
+    private BeanValidationBinder<User> binder = new BeanValidationBinder<>(User.class);
 
     public RegisterForm(UserService userService) {
+        this.userService = userService;
         addClassName("register-form");
 
         add(createTitle());
@@ -75,6 +70,8 @@ public class RegisterForm extends VerticalLayout {
 
         binder.forField(hashedPassword).withValidator(this::passwordValidator);
 
+        binder.forField(username).withValidator(this::userNameUniqueness);
+
         //connect all fields to entity + validations
         binder.bindInstanceFields(this);
 
@@ -87,6 +84,11 @@ public class RegisterForm extends VerticalLayout {
             binder.validate();
         });
     }
+
+
+
+
+
 
     private void submitForm(UserService userService) {
         try{
@@ -149,6 +151,13 @@ public class RegisterForm extends VerticalLayout {
             return ValidationResult.ok();
         }
         return ValidationResult.error("Passwords do not match");
+    }
+
+    private ValidationResult userNameUniqueness (String userName, ValueContext valueContext) {
+        if(userService.find(userName)==null){
+            return ValidationResult.error("Username already in use, pick a different one");
+        }
+        return ValidationResult.ok();
     }
 
     private void clearForm() {

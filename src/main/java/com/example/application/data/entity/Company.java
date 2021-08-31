@@ -1,6 +1,7 @@
 package com.example.application.data.entity;
 
 import com.example.application.data.AbstractEntity;
+import com.vaadin.flow.component.button.Button;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -14,20 +15,16 @@ public class Company extends AbstractEntity {
     private String mail;
     private String mainImageURL;
     private int rating;
-    private String description;
-    private String street;
-    private String city;
-    private String country;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
     private User admin;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
-    private List<Contact> customers = new LinkedList<>();
+    private List<Booking> bookings = new LinkedList<>();
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private List<TypeService> servics = new LinkedList<>();
+
 
 
     public Company() {
@@ -58,40 +55,19 @@ public class Company extends AbstractEntity {
         this.name = name;
     }
 
-    public List<Contact> getCustomers() {
-        return customers;
+    public List<Booking> getBookings() {
+        return bookings;
     }
-/*
+
     public List<TypeService> getService() {
         return servics;
     }
-*/
+
     public void setRating(int rating){this.rating = rating;}
 
     public int getRating(){return rating;}
 
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public String getStreet() {
-        return street;
-    }
-    public void setStreet(String street) {
-        this.street = street;
-    }
-    public String getCity() {
-        return city;
-    }
-    public void setCity(String city) {
-        this.city = city;
-    }
-    public String getCountry() {
-        return country;
-    }
-    public void setCountry(String country) {
-        this.country = country;
+    public void addBooking(Booking booking) {
+        bookings.add(booking);
     }
 }

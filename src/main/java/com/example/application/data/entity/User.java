@@ -20,6 +20,7 @@ public class User extends AbstractEntity {
     @NotEmpty(message = "Must enter a Username")
     @Length(message = "username length must be at least 4 character and max 10", min = 4, max = 10)
     @NotNull(message = "Must enter username")
+    @Column(unique=true)
     private String username;
     @Pattern(message = "Invalid character for name. must be only letters", regexp = "^[A-Za-z]*$")
     @Length(message = "Invalid name length", max = 15)
@@ -38,11 +39,12 @@ public class User extends AbstractEntity {
     private String profilePictureUrl;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Contact> contact = new LinkedList<>();
+    private List<Booking> bookings = new LinkedList<>();
 
     @Email
     @NotNull
     @NotEmpty
+    @Column(unique=true)
     private String email;
 
 
@@ -84,5 +86,10 @@ public class User extends AbstractEntity {
     public void setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
     }
-
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+    public void addBooking(Booking booking) {
+        bookings.add(booking);
+    }
 }
