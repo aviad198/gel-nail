@@ -10,9 +10,11 @@ import org.vaadin.artur.helpers.CrudService;
 public class AddressService extends CrudService<Address, Integer> {
 
     private AddressRepository repository;
+    private CompanyRepository companyRepository;
 
-    public AddressService(@Autowired AddressRepository repository) {
+    public AddressService(@Autowired AddressRepository repository, CompanyRepository companyRepository) {
         this.repository = repository;
+        this.companyRepository = companyRepository;
     }
 
     @Override

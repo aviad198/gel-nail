@@ -97,7 +97,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     }
 
     private void updateList() {
-        companyList = companyService.findAll(businessName.getValue());
+        companyList = companyService.findAll();
         imageGrid.UpdateGrid(companyList);
     }
 }

@@ -1,6 +1,9 @@
 package com.example.application.views.booking;
 
 import com.example.application.data.entity.*;
+import com.example.application.data.service.BookingService;
+import com.example.application.data.service.CompanyService;
+import com.example.application.data.service.UserService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -13,16 +16,21 @@ import javax.annotation.security.PermitAll;
 import java.time.LocalDateTime;
 
 @PermitAll
-public class ScheduleDialog extends Dialog{
+public class ScheduleDialog extends Dialog {
+
     private FormLayout formLayout;
     private BeanValidationBinder<Contact> binder;
+
+    private UserService userService;
+    private CompanyService companyService;
+    private BookingService bookingService;
 
     LocalDateTime timeChosen;
     private User user;
     Label timeAndDateLabel;
 
 
-    public ScheduleDialog(Company company) {
+    public ScheduleDialog(UserService userService, CompanyService companyService, BookingService bookingService, Company company) {
         //get service
         formLayout = new FormLayout();
 
@@ -31,23 +39,24 @@ public class ScheduleDialog extends Dialog{
         Button bookBtn = new Button("Save");
         Button cancel = new Button("Cancel");
 
-        cancel.addClickListener(e-> close());
+        cancel.addClickListener(e -> close());
 
-        bookBtn.addClickListener(e->{
-            Booking newBooking = new Booking(company,user,timeChosen);
+        bookBtn.addClickListener(e -> {
+            Booking newBooking = new Booking();
+            newBooking.setCompany(company);
+            newBooking.setUser(user);
+            newBooking.setTimeChosen(timeChosen);
+            bookingService.update(newBooking);
+            user.addBooking(newBooking);
+            userService.update(user);
+            company.addBooking(newBooking);
+            companyService.update(company);
 
-           //Contact contact = new Contact();
-           //contact.setCompany(company);
-           //contact.setEmail(user.getEmail());
-           //contact.setFirstName(user.getFirstName());
-           //contact.setLastName(user.getLastName());
-           user.addBooking(newBooking);
-           company.addBooking(newBooking);
-           close();
-           //TESTING-
-           System.out.println("Booking list - ");
-           System.out.println("Company = "+company+"; Company booking = " + company.getBookings().toString());
-           System.out.println("User = " +user + "; User booking = " + user.getBookings().toString());
+            close();
+            //TESTING-
+            System.out.println("Booking list - ");
+            //System.out.println("Company = "+company+"; Company booking = " + company.getBookings().toString());
+            System.out.println("User = " + user + "; User booking = " + user.getBookings().toString());
 
 
         });
@@ -63,9 +72,10 @@ public class ScheduleDialog extends Dialog{
         formLayout.add(timeAndDateLabel, comment, bookBtn, cancel);
         add(formLayout);
     }
-    public void setTime(LocalDateTime localDateTime){
+
+    public void setTime(LocalDateTime localDateTime) {
         timeChosen = localDateTime;
-        timeAndDateLabel.setText(timeChosen.toString().replace('T',' '));
+        timeAndDateLabel.setText(timeChosen.toString().replace('T', ' '));
     }
 
     public void setUser(User user) {

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.example.application.data.entity.Company;
 import com.example.application.data.entity.User;
+import com.example.application.data.service.BookingService;
 import com.example.application.data.service.CompanyService;
 
 import com.example.application.data.service.UserService;
@@ -39,15 +40,10 @@ public class CompanyView extends Div implements BeforeEnterObserver {
     private final String COMPANY_ID = "companyID";
     private final String COMPANY_EDIT_ROUTE_TEMPLATE = "Company/%d/edit";
 
-    //private Grid<SampleFoodProduct> grid = new Grid<>(SampleFoodProduct.class, false);
-
-    //    private Upload image;
+    //private Upload image;
     private Image companyImage;
 
     private ScheduleDialog scheduleDialog;
-
-//    private Button cancel = new Button("Cancel");
-//    private Button save = new Button("Save");
 
     private BeanValidationBinder<Company> binder;
 
@@ -63,10 +59,13 @@ public class CompanyView extends Div implements BeforeEnterObserver {
 
     private UserService userService;
 
-    public CompanyView(@Autowired CompanyService companyService, AuthenticatedUser authenticatedUser, UserService userService) {
+    private BookingService bookingService;
+
+    public CompanyView(@Autowired CompanyService companyService, AuthenticatedUser authenticatedUser, UserService userService, BookingService bookingService) {
         this.companyService = companyService;
         this.authenticatedUser = authenticatedUser;
         this.userService = userService;
+        this.bookingService =bookingService;
         addClassNames("cares-view", "flex", "flex-col", "h-full");
 
         // Create UI
@@ -74,83 +73,23 @@ public class CompanyView extends Div implements BeforeEnterObserver {
 
         createHeader(verticalLayout);
         createScheduleLayout(verticalLayout);
-        //createEditorLayout(splitLayout);
-        //add(companyImage);
+
+
         add(verticalLayout);
 
-        // Configure Grid
-        /*TemplateRenderer<SampleFoodProduct> imageRenderer = TemplateRenderer.<SampleFoodProduct>of(
-                "<span style='border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px'><img style='max-width: 100%' src='[[item.image]]' /></span>")
-                .withProperty("image", SampleFoodProduct::getImage);
-        grid.addColumn(imageRenderer).setHeader("Image").setWidth("96px").setFlexGrow(0);
 
-        grid.addColumn("name").setAutoWidth(true);
-        grid.addColumn("eanCode").setAutoWidth(true);
-        grid.setItems(query -> sampleFoodProductService.list(
-                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        grid.setHeightFull();
-
-        // when a row is selected or deselected, populate form
-        grid.asSingleSelect().addValueChangeListener(event -> {
-            if (event.getValue() != null) {
-                UI.getCurrent()
-                        .navigate(String.format(SAMPLEFOODPRODUCT_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
-            } else {
-                clearForm();
-                UI.getCurrent().navigate(CompanyView.class);
-            }
-        });*/
 
         // Configure Form
         binder = new BeanValidationBinder<>(Company.class);
 
-        // Bind fields. This where you'd define e.g. validation rules
 
-        //     binder.bindInstanceFields(this);
-/*
-
-        attachImageUpload(image, imagePreview);
-
-        cancel.addClickListener(e -> {
-            clearForm();
-            refreshGrid();
-        });
-
-        save.addClickListener(e -> {
-            try {
-                if (this.sampleFoodProduct == null) {
-                    this.sampleFoodProduct = new SampleFoodProduct();
-                }
-                binder.writeBean(this.sampleFoodProduct);
-                this.sampleFoodProduct.setImage(imagePreview.getSrc());
-
-                sampleFoodProductService.update(this.sampleFoodProduct);
-                clearForm();
-                refreshGrid();
-                Notification.show("SampleFoodProduct details stored.");
-                UI.getCurrent().navigate(CompanyView.class);
-            } catch (ValidationException validationException) {
-                Notification.show("An exception happened while trying to store the sampleFoodProduct details.");
-            }
-        });
-*/
 
     }
 
     private void createHeader(VerticalLayout verticalLayout) {
-//        companyImage = new Image();
-//        companyImage.setVisible(true);
-//        companyImage.setMaxHeight(550, Unit.PIXELS);
-//        companyName = new Label();
-//        verticalLayout.add(companyImage);
-//        verticalLayout.add(companyName);
         companyHeader = new CompanyHeader();
         verticalLayout.add(companyHeader);
-
     }
-
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
@@ -159,7 +98,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
             Optional<Company> companyFromBackend = companyService
                     .get(companyID.get());
             if (companyFromBackend.isPresent()) {
-                Company company = companyService.getComp(companyFromBackend.get().getId());
+                Company company = companyFromBackend.get();
                 populatePage(company);
                 //populateHeader();
             } else {
@@ -242,7 +181,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         time.addClickListener(e -> {
             Optional<User> authUser = authenticatedUser.get();
             if (authUser.isPresent()) {
-                User user = userService.getUser(authUser.get());
+                User user = userService.get(authUser.get().getId()).get();
                 System.out.println("Users: = " + userService.findAll());
                 System.out.println("Company: = " + companyService.findAll());
                 scheduleDialog.setTime(dateTimePicker.getValue());
@@ -319,13 +258,13 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         this.company = company;
         binder.readBean(this.company);
         if (company == null) {
-            //this.companyImage.setSrc("");
+            this.companyImage.setSrc("");
         } else {
             companyImage = new Image();
-            this.companyImage.setSrc(company.getMainImageURL());
+           this.companyImage.setSrc(company.getMainImageURL());
             companyImage.setVisible(true);
-            companyHeader.setCompanyHeader(company.getMainImageURL(), "no text yet", company.getName(), "no sub yet", "no desc yet", "5");
-            scheduleDialog = new ScheduleDialog(company);
+           companyHeader.setCompanyHeader(company.getMainImageURL(), "no text yet", company.getName(), "no sub yet", "no desc yet", "5");
+           scheduleDialog = new ScheduleDialog(userService,companyService,bookingService,company);
         }
 
     }

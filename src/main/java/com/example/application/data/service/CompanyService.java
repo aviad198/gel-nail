@@ -4,13 +4,17 @@ import com.example.application.data.entity.Address;
 import com.example.application.data.entity.Company;
 import com.example.application.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
-public class CompanyService extends CrudService<Company, Integer> {
+public class CompanyService extends CrudService<Company,Integer> {
 
     private CompanyRepository companyRepository;
 
@@ -29,9 +33,6 @@ public class CompanyService extends CrudService<Company, Integer> {
             return companyRepository.search(stringFilter);
         }
     }
-    public Company getComp(Integer companyID){
-        return companyRepository.getOne(companyID);
-    }
 
     @Override
     protected CompanyRepository getRepository() {
@@ -39,3 +40,4 @@ public class CompanyService extends CrudService<Company, Integer> {
     }
 
 }
+

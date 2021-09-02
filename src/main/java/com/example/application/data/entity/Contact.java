@@ -30,6 +30,11 @@ public class Contact extends AbstractEntity{
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @OneToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private Contact.Status status;
@@ -79,6 +84,14 @@ public class Contact extends AbstractEntity{
 
     public Company getCompany() {
         return company;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override

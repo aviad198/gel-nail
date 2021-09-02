@@ -1,27 +1,41 @@
 package com.example.application.data.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.example.application.data.AbstractEntity;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 public class Address extends AbstractEntity {
 
-    private String street;
-    private String postalCode;
-    private String city;
-    private String state;
-    private String country;
+    @NotNull
+    @NotEmpty
+    private String street = "";
 
-    public Company getCompany() {
-        return company;
-    }
 
-    public void setCompany(Company company) {
-        this.company = company;
-    }
+    private String postalCode = "";
 
-    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @NotNull
+    @NotEmpty
+    private String city = "";
+
+
+    private String state ="";
+
+    @NotNull
+    @NotEmpty
+    private String country="";
+
+
+    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
+    private Contact employees;
+
+
+    @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
@@ -55,6 +69,10 @@ public class Address extends AbstractEntity {
     public void setCountry(String country) {
         this.country = country;
     }
+    public Contact getEmployees() {
+        return employees;
+    }
+
 
     @Override
     public String toString() {

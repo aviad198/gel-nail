@@ -94,4 +94,7 @@ public class User extends AbstractEntity {
     public void addBooking(Booking booking) {
         bookings.add(booking);
     }
+    public String toString(){
+        return username;
+    }
 }

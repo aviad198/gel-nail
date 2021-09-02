@@ -53,7 +53,7 @@ public class DataGenerator {
             sampleFoodProductRepository.saveAll(sampleFoodProductRepositoryGenerator.create(100, seed));
 */
             logger.info("... generating 10 addresses entities...");
-            if (addressRepository.count() == 0) {
+/*            if (addressRepository.count() == 0) {
                 ExampleDataGenerator<Address> addressRepositoryGenerator = new ExampleDataGenerator<>(
                         Address.class, LocalDateTime.of(2021, 8, 31, 0, 0, 0));
                 addressRepositoryGenerator.setData(Address::setCity, DataType.CITY);
@@ -62,7 +62,7 @@ public class DataGenerator {
                 addressRepositoryGenerator.setData(Address::setPostalCode, DataType.ZIP_CODE);
                 addressRepository.saveAll(addressRepositoryGenerator.create(10, seed));
 
-            }
+            }*/
 
 
             logger.info("... generating 2 User entities...");
@@ -87,7 +87,17 @@ public class DataGenerator {
             admin.setEmail("admin@admin.com");
             userRepository.save(admin);
 
-            List<Address> addressList = addressRepository.findAll();
+            List<Company> companyList = companyRepository.findAll();
+            if(companyList.size()>0)
+                companyList.get(0).setAdmin(admin);
+            companyRepository.save(companyList.get(0));
+
+            if(companyList.size()>1)
+                companyList.get(1).setAdmin(user);
+            companyRepository.save(companyList.get(1));
+
+
+          /*  List<Address> addressList = addressRepository.findAll();
             logger.info("... generating 6 company entities...");
             if (companyRepository.count() == 0) {
                 Company company1 = new Company("Make my Nail",admin,"https://picsum.photos/200",new Random().nextInt(5) + 1,addressList.get(1));
@@ -101,7 +111,7 @@ public class DataGenerator {
                 companyRepository.save(company3);
                 companyRepository.save(company4);
                 companyRepository.save(company5);
-                companyRepository.save(company6);
+                companyRepository.save(company6);*/
 
                 //                companyRepository.saveAll(
 //
@@ -115,12 +125,12 @@ public class DataGenerator {
 //                                    company.setAddress(addressList.get(new Random().nextInt(5) + 1));
 //                                    return company;
 //                                }).collect(Collectors.toList()));
-            }
-            logger.info("... generating 7 services entities...");
+//            }
+            //logger.info("... generating 7 services entities...");
 
-            List<Company> companyList = companyRepository.findAll();
+//            List<Company> companyList = companyRepository.findAll();
 
-            if (serviceRepository.count() == 0) {
+          /*  if (serviceRepository.count() == 0) {
                 TypeService typeService1 = new TypeService("Polish", 40, 15, (Integer) companyList.get(0).getId(), companyList.get(0));
                 TypeService typeService2 = new TypeService("manicure gel", 120, 70, (Integer) companyList.get(0).getId(), companyList.get(0));
                 TypeService typeService3 = new TypeService("medical manicure", 230, 90, (Integer) companyList.get(1).getId(), companyList.get(1));
@@ -135,9 +145,9 @@ public class DataGenerator {
                 serviceRepository.save(typeService5);
                 serviceRepository.save(typeService6);
                 serviceRepository.save(typeService7);
-            }
+            }*/
 
-            logger.info("... generating 6 bookings entities...");
+    /*        logger.info("... generating 6 bookings entities...");
             Booking booking1 = new Booking(companyList.get(0),user,LocalDateTime.now().plusDays(2).plusHours(4));
             Booking booking2 = new Booking(companyList.get(0),user,LocalDateTime.now().plusDays(2).plusHours(4));
             Booking booking3 = new Booking(companyList.get(1),user,LocalDateTime.now().plusDays(2).plusHours(4));
@@ -153,7 +163,7 @@ public class DataGenerator {
             bookingRepository.save(booking6);
             bookingRepository.save(booking7);
 
-            logger.info("Generated demo data");
+            logger.info("Generated demo data");*/
         };
     }
 }

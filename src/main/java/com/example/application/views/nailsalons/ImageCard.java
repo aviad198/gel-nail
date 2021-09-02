@@ -40,10 +40,10 @@ public class ImageCard extends LitTemplate {
     }
 
     public ImageCard(String name, String mainImageURL, String description, Address address, int rating) {
-        this.image.setSrc(mainImageURL);
+        this.image.setSrc(mainImageURL==null? "" : mainImageURL);
         this.image.setAlt(name);
         this.header.setText(name);
-        this.subtitle.setText(address == null?"no address" : address.toString());
+        this.subtitle.setText("");
         this.text.setText(description);
         this.badge.setText("*".repeat(rating));
     }
