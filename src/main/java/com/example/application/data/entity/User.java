@@ -47,7 +47,9 @@ public class User extends AbstractEntity {
     @Column(unique=true)
     private String email;
 
-
+    @OneToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     public User() {
     }

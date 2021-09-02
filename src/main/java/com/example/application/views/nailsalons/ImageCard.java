@@ -1,5 +1,6 @@
 package com.example.application.views.nailsalons;
 
+import com.example.application.data.entity.Address;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Image;
@@ -36,5 +37,14 @@ public class ImageCard extends LitTemplate {
         this.text.setText(
                 "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.");
         this.badge.setText("Label");
+    }
+
+    public ImageCard(String name, String mainImageURL, String description, Address address, int rating) {
+        this.image.setSrc(mainImageURL);
+        this.image.setAlt(name);
+        this.header.setText(name);
+        this.subtitle.setText(address == null?"no address" : address.toString());
+        this.text.setText(description);
+        this.badge.setText("*".repeat(rating));
     }
 }

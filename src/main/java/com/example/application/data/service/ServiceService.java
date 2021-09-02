@@ -1,6 +1,7 @@
 package com.example.application.data.service;
 
 import com.example.application.data.entity.TypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +29,7 @@ public class ServiceService{
     }
 
 
-    public ServiceService(ServiceRepository serviceRepository,
+    public ServiceService(@Autowired ServiceRepository serviceRepository,
                           CompanyRepository companyRepository) {
         this.serviceRepository = serviceRepository;
         this.companyRepository = companyRepository;

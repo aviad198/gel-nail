@@ -1,4 +1,4 @@
-package com.example.application.views.cares;
+package com.example.application.views.booking;
 
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;

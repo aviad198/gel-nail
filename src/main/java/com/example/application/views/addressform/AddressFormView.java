@@ -1,7 +1,7 @@
 package com.example.application.views.addressform;
 
-import com.example.application.data.entity.SampleAddress;
-import com.example.application.data.service.SampleAddressService;
+import com.example.application.data.entity.Address;
+import com.example.application.data.service.AddressService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -32,9 +32,9 @@ public class AddressFormView extends Div {
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
-    private Binder<SampleAddress> binder = new Binder<>(SampleAddress.class);
+    private Binder<Address> binder = new Binder<>(Address.class);
 
-    public AddressFormView(SampleAddressService addressService) {
+    public AddressFormView(AddressService addressService) {
         addClassName("address-form-view");
 
         add(createTitle());
@@ -78,7 +78,7 @@ public class AddressFormView extends Div {
     }
 
     private void clearForm() {
-        this.binder.setBean(new SampleAddress());
+        this.binder.setBean(new Address());
     }
 
 }

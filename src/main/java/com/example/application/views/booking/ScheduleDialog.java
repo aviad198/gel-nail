@@ -1,14 +1,12 @@
-package com.example.application.views.cares;
+package com.example.application.views.booking;
 
 import com.example.application.data.entity.*;
-import com.example.application.data.service.ContactService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 
 import javax.annotation.security.PermitAll;

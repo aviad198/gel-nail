@@ -1,17 +1,29 @@
 package com.example.application.data.entity;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import com.example.application.data.AbstractEntity;
 
 @Entity
-public class SampleAddress extends AbstractEntity {
+public class Address extends AbstractEntity {
 
     private String street;
     private String postalCode;
     private String city;
     private String state;
     private String country;
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     public String getStreet() {
         return street;
@@ -42,6 +54,11 @@ public class SampleAddress extends AbstractEntity {
     }
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return street + ", " + city + ", "+ country;
     }
 
 }

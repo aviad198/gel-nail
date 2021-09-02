@@ -1,7 +1,7 @@
 package com.example.application.views.nailsalons;
 
 import com.example.application.data.entity.Company;
-import com.example.application.views.cares.CompanyView;
+import com.example.application.views.booking.CompanyView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouteParameters;
 
@@ -11,7 +11,7 @@ public class ImageGrid extends VerticalLayout {
 
     public ImageGrid(List<Company> companyList){
         for(Company company : companyList){
-        ImageCard item = new ImageCard(company.getName(), company.getMainImageURL());
+        ImageCard item = new ImageCard(company.getName(),company.getMainImageURL(),company.getDescription(),company.getAddress(),company.getRating());
         this.addClickListener(e -> openCompany(company.getId()));
         add(item);
        }

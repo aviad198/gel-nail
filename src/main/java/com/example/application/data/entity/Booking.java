@@ -10,12 +10,15 @@ import java.time.LocalDateTime;
 public class Booking extends AbstractEntity {
 
     @ManyToOne
-    @NotEmpty(message = "must have a company")
+    @JoinColumn(name = "company_id")
+    //@NotEmpty(message = "must have a company")
     private Company company;
+
     @ManyToOne
-    @NotEmpty(message = "must have a user")
+    //@NotEmpty(message = "must have a user")
     private User user;
-    @NotEmpty(message = "must have a date and time")
+
+    //@NotEmpty(message = "must have a date and time")
     private LocalDateTime timeChosen;
 
     public Booking() {

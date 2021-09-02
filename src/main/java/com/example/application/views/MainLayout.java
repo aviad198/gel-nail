@@ -3,7 +3,7 @@ package com.example.application.views;
 import com.example.application.data.entity.User;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.addressform.AddressFormView;
-import com.example.application.views.cares.CompanyView;
+import com.example.application.views.booking.CompanyView;
 import com.example.application.views.checkoutform.CheckoutFormView;
 import com.example.application.views.creditcardform.CreditCardFormView;
 import com.example.application.views.dashboard.DashboardView;

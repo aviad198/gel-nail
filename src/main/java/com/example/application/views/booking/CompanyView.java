@@ -1,6 +1,5 @@
-package com.example.application.views.cares;
+package com.example.application.views.booking;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,23 +9,16 @@ import com.example.application.data.entity.Company;
 import com.example.application.data.entity.User;
 import com.example.application.data.service.CompanyService;
 
-import com.example.application.data.service.UserRepository;
 import com.example.application.data.service.UserService;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.nailsalons.NailSalonsView;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -36,8 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.example.application.views.MainLayout;
-
-import javax.annotation.security.PermitAll;
 
 import com.vaadin.flow.component.html.Image;
 
@@ -169,7 +159,8 @@ public class CompanyView extends Div implements BeforeEnterObserver {
             Optional<Company> companyFromBackend = companyService
                     .get(companyID.get());
             if (companyFromBackend.isPresent()) {
-                populatePage(companyFromBackend.get());
+                Company company = companyService.getComp(companyFromBackend.get().getId());
+                populatePage(company);
                 //populateHeader();
             } else {
                 Notification.show(String.format("The requested Company was not found, ID = %d",
@@ -242,7 +233,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         dateTimePicker.setValue(LocalDateTime.of(LocalDate.now(),LocalTime.of(LocalTime.now().getHour()+1, 0)));
         dateTimePicker.setHelperText("Must be within 60 days from today");
         //if now is before 7AM min time would be 7AM else - current time
-        dateTimePicker.setMin(LocalDateTime.now().isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0))) ? LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0)) : LocalDateTime.now());
+        dateTimePicker.setMin(LocalDateTime.now().isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0))) ? LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0)) : LocalDateTime.of(LocalDate.now(),LocalTime.of(LocalTime.now().getHour()+1, 0)));
         //no more then 60 days ahead
         dateTimePicker.setMax(LocalDateTime.now().plusDays(60));
 
@@ -251,9 +242,9 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         time.addClickListener(e -> {
             Optional<User> authUser = authenticatedUser.get();
             if (authUser.isPresent()) {
-                User user = authUser.get();
+                User user = userService.getUser(authUser.get());
                 System.out.println("Users: = " + userService.findAll());
-                System.out.println("Users: = " + companyService.findAll());
+                System.out.println("Company: = " + companyService.findAll());
                 scheduleDialog.setTime(dateTimePicker.getValue());
                 scheduleDialog.setUser(user);
                 scheduleDialog.open();

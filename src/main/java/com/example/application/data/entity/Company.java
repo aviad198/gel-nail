@@ -4,6 +4,7 @@ import com.example.application.data.AbstractEntity;
 import com.vaadin.flow.component.button.Button;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -11,12 +12,18 @@ import java.util.Random;
 @Entity
 public class Company extends AbstractEntity {
 
+    //@NotEmpty(message = "must have a name")
     private String name;
     private String mail;
     private String mainImageURL;
     private int rating;
+    private String description;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    @OneToOne(mappedBy = "company")
     private User admin;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER)
@@ -25,17 +32,17 @@ public class Company extends AbstractEntity {
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private List<TypeService> servics = new LinkedList<>();
 
-
-
     public Company() {
+        super();
     }
-    public Company(String name) {
-        String[] ImageLinks = {"https://i.pinimg.com/564x/8d/81/8e/8d818e332b10c594b75b802b79d531ed.jpg", "https://www.ambermarieandcompany.com/copy-of-fun-zone-polka-dot-nail-polish.html?source=googlebase",
-                "https://i.pinimg.com/474x/b1/ef/fa/b1effaee264095487da37d45f8b8cd7f.jpg","https://i.pinimg.com/474x/1a/e4/06/1ae406e18c054b1930b2d55f678bab63.jpg",
-        "https://i.pinimg.com/474x/c5/79/82/c5798298fc3e9288b705091092dc5075.jpg"};
-        setName(name);
-        Random rand = new Random();
-        setMainImageURL(ImageLinks[rand.nextInt(ImageLinks.length)]);
+
+    public Company(String name, User admin, String mainImageURL, int rating, Address address) {
+        super();
+        this.name=name;
+        this.admin =admin;
+        this.mainImageURL =mainImageURL;
+        this.rating =rating;
+        this.address=address;
     }
 
     public String getMainImageURL() {
@@ -69,5 +76,29 @@ public class Company extends AbstractEntity {
 
     public void addBooking(Booking booking) {
         bookings.add(booking);
+    }
+
+    public User getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(User admin) {
+        this.admin = admin;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

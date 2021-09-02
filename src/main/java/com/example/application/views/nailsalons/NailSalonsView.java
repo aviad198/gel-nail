@@ -48,20 +48,27 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     List<Company> companyList;
     List<TypeService> serviceList;
     FormLayout layoutSearch = new FormLayout();
+
     public NailSalonsView(CompanyService companyService, ServiceService serviceService) {
+        //get services
+        this.companyService = companyService;
+        this.serviceService = serviceService;
+        //add CSS/JS files
         addClassNames("nail-salons-view", "flex", "flex-col", "h-full");
+        //configure sort
         sortBy.setItems("Popularity", "Newest first", "Oldest first");
         sortBy.setValue("Popularity");
+
         configureFilter(serviceService);
 
         HorizontalLayout layoutSearch = new HorizontalLayout();
         VerticalLayout layout = new VerticalLayout();
+
         layoutSearch.add(businessName, services, location, startSearch);
         layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
 
         layout.add(layoutSearch);
-        this.companyService = companyService;
-        this.serviceService = serviceService;
+
         companyList = companyService.findAll();
         imageGrid = new ImageGrid(companyList);
         layout.add(imageGrid);

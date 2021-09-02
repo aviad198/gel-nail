@@ -16,6 +16,7 @@ public class UserService extends CrudService<User, Integer> {
     public UserService(@Autowired UserRepository repository) {
         this.repository = repository;
     }
+
     public List<User> findAll() {
         return repository.findAll();
     }
@@ -27,5 +28,9 @@ public class UserService extends CrudService<User, Integer> {
 
     public User find(String username) {
         return repository.findByUsername(username);
+    }
+
+    public User getUser(User user) {
+        return repository.getOne(user.getId());
     }
 }

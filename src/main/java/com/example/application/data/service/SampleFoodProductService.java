@@ -12,7 +12,7 @@ public class SampleFoodProductService extends CrudService<SampleFoodProduct, Int
 
     private SampleFoodProductRepository repository;
 
-    public SampleFoodProductService(@Autowired SampleFoodProductRepository repository) {
+    public SampleFoodProductService( SampleFoodProductRepository repository) {
         this.repository = repository;
     }
 

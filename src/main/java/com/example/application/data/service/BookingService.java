@@ -2,15 +2,18 @@ package com.example.application.data.service;
 
 import com.example.application.data.entity.Booking;
 import com.example.application.data.entity.Company;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
 
 import java.util.List;
 
-public class BookingService extends CrudService<Booking,Integer> {
+@Service
+public class BookingService {
 
     private BookingRepository bookingRepository;
 
-    public BookingService(BookingRepository bookingRepository) {
+    public BookingService(@Autowired BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }
 
@@ -18,13 +21,9 @@ public class BookingService extends CrudService<Booking,Integer> {
         return bookingRepository.findAll();
     }
 
-  /*  public List<Booking> findAllCompany(Company company) {
+/*    public List<Booking> findAllCompany(Company company) {
         return bookingRepository.findCompanyBooking(company);
     }*/
 
-    @Override
-    protected BookingRepository getRepository() {
-        return bookingRepository;
-    }
 
 }
