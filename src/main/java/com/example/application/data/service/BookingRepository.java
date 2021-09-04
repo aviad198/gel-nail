@@ -23,4 +23,7 @@ public interface BookingRepository extends JpaRepository<Booking,Integer> {
 
    /* @Query("select b.timeChosen from Booking b where (b.company.id) = (Company.id)")
     List<LocalDateTime>bookingTimes(Company company);*/
+   @Query("select b from Booking b " +
+           "where b.user.id=:userId")
+   List<Booking> findBookingByUserId(Integer userId);
 }

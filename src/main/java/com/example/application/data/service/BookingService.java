@@ -23,6 +23,10 @@ public class BookingService extends CrudService<Booking,Integer>{
         return bookingRepository.findAll();
     }
 
+    public List<Booking> findAllByUserId(Integer userId) {
+        return bookingRepository.findBookingByUserId(userId);
+    }
+
     @Override
     protected BookingRepository getRepository() {
         return bookingRepository;
