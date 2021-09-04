@@ -5,6 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.example.application.data.AbstractEntity;
+import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,9 +36,12 @@ public class Address extends AbstractEntity {
     private Contact employees;
 
 
+
     @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+
 
     public String getStreet() {
         return street;
@@ -72,11 +76,18 @@ public class Address extends AbstractEntity {
     public Contact getEmployees() {
         return employees;
     }
+    public Company getCompany() {
+        return company;
+    }
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
 
     @Override
     public String toString() {
         return street + ", " + city + ", "+ country;
     }
+
 
 }

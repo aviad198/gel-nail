@@ -47,9 +47,18 @@ public class User extends AbstractEntity {
     @Column(unique=true)
     private String email;
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
 
     public User() {
     }

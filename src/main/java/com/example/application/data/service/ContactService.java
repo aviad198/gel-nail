@@ -82,6 +82,7 @@ public class ContactService {
             company1.setAddress(addresses.get(r.nextInt(addresses.size())));
             company1.setDescription("desc1");
             company1.setMainImageURL("https://picsum.photos/200");
+            company1.setMail("company1@comapny1.com");
             companyRepository.save(company1);
 
             Company company2 = new Company();
@@ -90,6 +91,7 @@ public class ContactService {
             company2.setAddress(addresses.get(r.nextInt(addresses.size())));
             company2.setDescription("desc2");
             company2.setMainImageURL("https://picsum.photos/200");
+            company2.setMail("company2@comapny2.com");
             companyRepository.save(company2);
         }
 
