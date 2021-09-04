@@ -1,40 +1,40 @@
 package com.example.application.views.registerForm;
 
 import com.example.application.data.Role;
+import com.example.application.data.entity.Address;
+import com.example.application.data.entity.Company;
 import com.example.application.data.entity.User;
+import com.example.application.data.service.AddressService;
+import com.example.application.data.service.CompanyService;
 import com.example.application.data.service.UserService;
 import com.example.application.security.SecurityConfiguration;
 import com.example.application.views.MainLayout;
-import com.example.application.views.booking.CompanyView;
 import com.example.application.views.login.LoginView;
-import com.example.application.views.nailsalons.NailSalonsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.dependency.Uses;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.*;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.hibernate.service.spi.ServiceException;
 
-import java.awt.*;
 import java.util.Collections;
 
 @PageTitle("Register Form")
-@Route(value = "register-form" ,layout = MainLayout.class)
+@Route(value = "register-form", layout = MainLayout.class)
 @AnonymousAllowed
 public class RegisterForm extends VerticalLayout {
 
@@ -52,7 +52,6 @@ public class RegisterForm extends VerticalLayout {
     AvatarField avatarField = new AvatarField("Select Avatar image");
 */
 
-
     private Checkbox userTypeCB;
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
@@ -64,32 +63,71 @@ public class RegisterForm extends VerticalLayout {
      */
     private boolean enablePasswordValidation;
 
-    private BeanValidationBinder<User> binder = new BeanValidationBinder<>(User.class);
+    private BeanValidationBinder<User> userBinder = new BeanValidationBinder<>(User.class);
+    private BeanValidationBinder<Company> companyBinder;
+    private BeanValidationBinder<Address> addressBinder;
 
-    public RegisterForm(UserService userService) {
+    /**
+     * fields for new company
+     */
+    private TextField  companyName = new TextField("Company name");
+
+    private NumberField phone = new NumberField("Phone number");
+
+    private EmailField companyEmail = new EmailField("Email address");
+
+    private ComboBox<String>  street = new ComboBox<>("Street address");
+
+    private ComboBox<String> city = new ComboBox<>("City");
+
+    private ComboBox<String>   country = new ComboBox<>("Country");
+
+    private TextField description = new TextField("Description");
+
+    private CompanyService companyService;
+    private AddressService addressService;
+
+    public RegisterForm(UserService userService, CompanyService companyService, AddressService addressService) {
         this.userService = userService;
+        this.companyService = companyService;
+        this.addressService = addressService;
+
         addClassName("register-form");
 
         add(createTitle());
         add(createFormLayout());
         add(createButtonLayout());
+        userTypeCB = new Checkbox("Are you a business owner?");
+        userTypeCB.addValueChangeListener(marked -> {
+            if (marked.getValue()) {
+                remove(createButtonLayout());
+                add(createCompanyLayout());
+                add(createAddressLayout());
+                add(createButtonLayout());
+            } else {
+                remove(createCompanyLayout());
+                remove(createAddressLayout());
+            }
+        });
+        userTypeCB.getStyle().set("padding-top", "10px");
+        add(userTypeCB);
         add(errorMessage);
         clearForm();
 
         //shows status at error message span
-        binder.setStatusLabel(errorMessage);
+        userBinder.setStatusLabel(errorMessage);
 
         cancel.addClickListener(e -> clearForm());
-        save.addClickListener(e -> submitForm(userService));
+        save.addClickListener(e -> submitForm());
 
-        binder.forField(hashedPassword).withValidator(this::passwordValidator).bind("hashedPassword");
+        userBinder.forField(hashedPassword).withValidator(this::passwordValidator).bind("hashedPassword");
 
-        binder.forField(username).withValidator(this::userNameUniqueness).bind("username");
+        userBinder.forField(username).withValidator(this::userNameUniqueness).bind("username");
 
-        binder.forField(email).withValidator(this::emailUniqueness).bind("email");
+        userBinder.forField(email).withValidator(this::emailUniqueness).bind("email");
 
         //connect all fields to entity + validations
-        binder.bindInstanceFields(this);
+        userBinder.bindInstanceFields(this);
 
         //if second password insert start compare to first
         hashedPassword2.addValueChangeListener(e -> {
@@ -97,43 +135,62 @@ public class RegisterForm extends VerticalLayout {
             // See passwordValidator() for how this flag is used.
             enablePasswordValidation = true;
 
-            binder.validate();
+            userBinder.validate();
         });
     }
 
-    private void submitForm(UserService userService) {
-        try{
+    private void submitForm() {
+        try {
             // Create empty bean to store the details into
             User user = new User();
             // Run validators and write the values to the bean
-            binder.writeBean(user);
+            userBinder.writeBean(user);
+
             //configure security to save password TO-DO(should be smoother)
             SecurityConfiguration securityConfiguration = new SecurityConfiguration();
-           //set hash password
+            //set hash password
             user.setHashedPassword(securityConfiguration.passwordEncoder().encode(user.getHashedPassword()));
-            //set role defualt TO-DO option to be admin of buisness
+            //set role default
             user.setRoles(Collections.singleton(Role.USER));
+
             //set profile picture - TO-DO change profile picture
             user.setProfilePictureUrl("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=128&h=128&q=80");
 
+            if (userTypeCB.getValue()) {
+                Address address = new Address();
+                addressBinder.writeBean(address);
+
+                Company company = new Company();
+                companyBinder.writeBean(company);
+
+                user.setRoles(Collections.singleton(Role.ADMIN));
+                company.setAddress(address);
+                address.setCompany(company);
+                user.setCompany(company);
+
+                companyService.update(company);
+                addressService.update(address);
+            }
             // Call backend to store the data
             userService.update(user);
+
             // Show success message if everything went well
-            Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+            Notification.show(userBinder.getBean().getClass().getSimpleName() + " details stored.");
+
+
             getUI().ifPresent(ui -> ui.navigate(LoginView.class));
-        }
-            catch (ValidationException e1){
+        } catch (ValidationException e1) {
             // validation errors are already visible for each field,
             // and bean-level errors are shown in the status label.
 
             // We could show additional messages here if we want, do logging, etc.
 
-            //Notification.show(binder.validate().getBeanValidationErrors().toString());
+            //Notification.show(addressBinder.validate().getBeanValidationErrors().toString());
         }
 /*            catch (ConstraintViolationException | TransactionSystemException e2){
             Notification.show(binder.validate().getBeanValidationErrors().toString());
             errorMessage.setText("Saving the data failed, please try again");
-        }*/ catch (ServiceException e3){
+        }*/ catch (ServiceException e3) {
             // For some reason, the save failed in the back end.
 
             // First, make sure we store the error in the server logs (preferably using a
@@ -167,14 +224,15 @@ public class RegisterForm extends VerticalLayout {
         return ValidationResult.error("Passwords do not match");
     }
 
-    private ValidationResult userNameUniqueness (String userName, ValueContext valueContext) {
-        if(userService.find(userName)!=null){
+    private ValidationResult userNameUniqueness(String userName, ValueContext valueContext) {
+        if (userService.find(userName) != null) {
             return ValidationResult.error("Username already in use, pick a different one");
         }
         return ValidationResult.ok();
     }
+
     private ValidationResult emailUniqueness(String mail, ValueContext valueContext) {
-        if(userService.findByEmail(mail)!=null){
+        if (userService.findByEmail(mail) != null) {
             return ValidationResult.error("This mail is already registered");
         }
         return ValidationResult.ok();
@@ -182,7 +240,7 @@ public class RegisterForm extends VerticalLayout {
 
     private void clearForm() {
 
-        binder.setBean(new User());
+        userBinder.setBean(new User());
     }
 
     private Component createTitle() {
@@ -196,9 +254,6 @@ public class RegisterForm extends VerticalLayout {
         errorMessage.getStyle().set("color", "var(--lumo-error-text-color)");
         errorMessage.getStyle().set("padding", "15px 0");
 
-        userTypeCB = new Checkbox("Are you a business owner?");
-        userTypeCB.getStyle().set("padding-top", "10px");
-
 
         username.setRequired(true);
         firstName.setRequired(true);
@@ -207,7 +262,48 @@ public class RegisterForm extends VerticalLayout {
         hashedPassword.setRequired(true);
 
         formLayout.add(username, firstName, lastName, email, hashedPassword, hashedPassword2);
+
+
         return formLayout;
+    }
+
+    private Component createCompanyLayout() {
+        FormLayout companyForm = new FormLayout();
+        companyBinder = new BeanValidationBinder<>(Company.class);
+
+
+        companyForm.add(companyName, companyEmail, description);
+
+        companyBinder.forField(companyName).bind("name");
+        companyBinder.forField(companyEmail).bind("mail");
+        companyBinder.forField(description).bind("description");
+
+        return companyForm;
+    }
+
+    private Component createAddressLayout() {
+        FormLayout addressForm = new FormLayout();
+        addressBinder = new BeanValidationBinder<>(Address.class);
+
+        street.setItems("HaYasmin", "Shalom", "Ben Guiron", "Malikshoa");
+        street.addCustomValueSetListener(
+                event -> street.setValue(event.getDetail()));
+        city.setItems("Jerusalem", "New-York", "Tel-Aviv", "New-Delhi");
+        city.addCustomValueSetListener(
+                event -> city.setValue(event.getDetail()));
+        country.setItems("Israel", "United States", "India");
+        country.addCustomValueSetListener(
+                event -> country.setValue(event.getDetail()));
+
+
+        addressForm.add(street, city, country);
+
+        addressBinder.forField(street).bind("street");
+        addressBinder.forField(city).bind("city");
+        addressBinder.forField(country).bind("country");
+
+
+        return addressForm;
     }
 
     private Component createButtonLayout() {

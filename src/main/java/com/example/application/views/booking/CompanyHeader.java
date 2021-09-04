@@ -1,5 +1,6 @@
 package com.example.application.views.booking;
 
+import com.example.application.data.entity.Address;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Image;
@@ -39,13 +40,12 @@ public class CompanyHeader extends LitTemplate {
         this.badge.setText(rating);
     }
 
-
-    public void setCompanyHeader(String url, String text, String name, String sub, String desc, String rating) {
-        this.image.setSrc(url);
-        this.image.setAlt(text);
+    public void setCompanyHeader(String name, String mainImageURL, String description, Address address, int rating) {
+        this.image.setSrc(mainImageURL==null? "" : mainImageURL);
+        this.image.setAlt(name);
         this.header.setText(name);
-        this.subtitle.setText(sub);
-        this.text.setText(desc);
-        this.badge.setText(rating);
+        this.subtitle.setText(address==null? "" : address.toString());
+        this.text.setText(description);
+        this.badge.setText("*".repeat(rating));
     }
 }

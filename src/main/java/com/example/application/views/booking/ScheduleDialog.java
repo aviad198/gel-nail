@@ -24,42 +24,31 @@ public class ScheduleDialog extends Dialog {
     private UserService userService;
     private CompanyService companyService;
     private BookingService bookingService;
+    private Company company;
 
-    LocalDateTime bookingDayTime;
+    private LocalDateTime bookingDayTime;
     private User user;
-    Label timeAndDateLabel;
+    private Label timeAndDateLabel;
 
 
-    public ScheduleDialog(UserService userService, CompanyService companyService, BookingService bookingService, Company company) {
+    public ScheduleDialog(UserService userService, CompanyService companyService, BookingService bookingService, Company company, CompanyView companyView) {
+        this.userService = userService;
+        this.companyService = companyService;
+        this.bookingService =bookingService;
+        this.company = company;
+
         //get service
         formLayout = new FormLayout();
 
 
         timeAndDateLabel = new Label("00:00");
+
         Button bookBtn = new Button("Save");
         Button cancel = new Button("Cancel");
 
         cancel.addClickListener(e -> close());
 
-        bookBtn.addClickListener(e -> {
-            Booking newBooking = new Booking();
-            newBooking.setCompany(company);
-            newBooking.setUser(user);
-            newBooking.setTimeChosen(bookingDayTime);
-            bookingService.update(newBooking);
-            user.addBooking(newBooking);
-            userService.update(user);
-            company.addBooking(newBooking);
-            companyService.update(company);
-
-            close();
-            //TESTING-
-            System.out.println("Booking list - ");
-            //System.out.println("Company = "+company+"; Company booking = " + company.getBookings().toString());
-            System.out.println("User = " + user + "; User booking = " + user.getBookings().toString());
-
-
-        });
+        bookBtn.addClickListener(e -> book(companyView));
         //choose a treatment
         Select<TypeService> serviceSelect = new Select<>();
         //serviceSelect.setItems()
@@ -71,6 +60,20 @@ public class ScheduleDialog extends Dialog {
 
         formLayout.add(timeAndDateLabel, comment, bookBtn, cancel);
         add(formLayout);
+    }
+
+    private void book(CompanyView companyView) {
+        Booking newBooking = new Booking();
+        newBooking.setCompany(company);
+        newBooking.setUser(user);
+        newBooking.setTimeChosen(bookingDayTime);
+        bookingService.update(newBooking);
+        user.addBooking(newBooking);
+        userService.update(user);
+        company.addBooking(newBooking);
+        companyService.update(company);
+        companyView.refreshSchedule();
+        close();
     }
 
     public void setTime(LocalDateTime bookingDayTime) {

@@ -3,6 +3,7 @@ package com.example.application.views.booking;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import com.example.application.data.entity.Company;
@@ -180,7 +181,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
 
     private void createScheduleLayout() {
 
-        String[] dayOfWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sut"};
+        String[] dayOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         HorizontalLayout scheduleHorizontalLayout = new HorizontalLayout();
 
         Button prevWeekBtn = new Button("<");
@@ -198,11 +199,11 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         scheduleHorizontalLayout.add(prevWeekBtn);
 
         LocalDateTime weekStart = today.minusDays(today.getDayOfWeek().getValue());
-        //LocalDateTime weekStart = LocalDate.now().minusDays(LocalDate.now().getDayOfWeek().getValue()).atTime(7,0);
         for (int day =0; day<7;day++) {
             VerticalLayout dayLayout = new VerticalLayout();
             scheduleHorizontalLayout.add(dayLayout);
             LocalDateTime bookingDay = weekStart.plusDays(day);
+            bookingDay.format(DateTimeFormatter.ISO_LOCAL_DATE);
             Label dayLab = new Label(dayOfWeek[day] +" "+bookingDay.getDayOfMonth() +"."+bookingDay.getMonthValue());
             dayLayout.add(dayLab);
             for (int time = 6; time < 24; time++) {
@@ -219,7 +220,6 @@ public class CompanyView extends Div implements BeforeEnterObserver {
                         scheduleDialog.setTime(bookingDayTime);
                         scheduleDialog.setUser(user);
                         scheduleDialog.open();
-                        refreshSchedule();
                     } else {
                         Notification.show("Must signing to Book appointment");
                     }
@@ -232,7 +232,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
 
     }
 
-    private void refreshSchedule() {
+    public void refreshSchedule() {
         wrapper.removeAll();
         createScheduleLayout();
     }
@@ -255,13 +255,6 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         preview.setVisible(false);
     }*/
 
-
-    private void ScheduleLayout() {
-
-    }
-
-
-
     private void clearForm() {
         populatePage(null);
     }
@@ -275,8 +268,8 @@ public class CompanyView extends Div implements BeforeEnterObserver {
             companyImage = new Image();
            this.companyImage.setSrc(company.getMainImageURL());
             companyImage.setVisible(true);
-           companyHeader.setCompanyHeader(company.getMainImageURL(), "no text yet", company.getName(), "no sub yet", "no desc yet", "5");
-           scheduleDialog = new ScheduleDialog(userService,companyService,bookingService,company);
+           companyHeader.setCompanyHeader(company.getName(),company.getMainImageURL(),company.getDescription(),company.getAddress(),company.getRating());;
+           scheduleDialog = new ScheduleDialog(userService,companyService,bookingService,company,this);
         }
 
     }

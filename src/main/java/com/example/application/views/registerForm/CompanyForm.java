@@ -1,4 +1,4 @@
-package com.example.application.views.companyForm;
+package com.example.application.views.registerForm;
 
 import com.example.application.data.entity.Company;
 import com.example.application.data.service.CompanyService;
@@ -36,7 +36,7 @@ public class CompanyForm extends VerticalLayout {
 
     private Binder<Company> binder = new Binder<>(Company.class);
 
-    private CompanyForm(CompanyService companyService){
+    CompanyForm(CompanyService companyService){
         addClassName("company-form-view");
 
         add(createTitle());
@@ -53,6 +53,7 @@ public class CompanyForm extends VerticalLayout {
             clearForm();
         });
     }
+
 
     private Component createTitle() {
         return new H3(" Registration Company");

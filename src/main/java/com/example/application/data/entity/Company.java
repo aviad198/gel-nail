@@ -2,8 +2,10 @@ package com.example.application.data.entity;
 
 import com.example.application.data.AbstractEntity;
 import com.vaadin.flow.component.button.Button;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.LinkedList;
@@ -13,10 +15,18 @@ import java.util.Random;
 @Entity
 public class Company extends AbstractEntity {
 
-    private String name;
-    private String mail;
+    @NotEmpty(message = "Must enter the company name")
+    @NotNull(message = "Must enter username")
+    private String name = "";
+    @Email
+    @NotNull
+    @NotEmpty
+    @Column(unique=true)
+    private String mail = "";
+
     private String mainImageURL;
     private int rating;
+
     private String description;
 
     //to remove
@@ -26,6 +36,7 @@ public class Company extends AbstractEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User admin;
+
 
     @OneToOne
     @JoinColumn(name = "address_id")
