@@ -101,9 +101,9 @@ public class MainLayout extends AppLayout {
             avatar.addClassNames("ms-auto", "me-m");
             ContextMenu userMenu = new ContextMenu(avatar);
             userMenu.setOpenOnClick(true);
-            userMenu.addItem("Logout", e -> {
-                authenticatedUser.logout();
-            });
+            userMenu.addItem("Your profile");
+            userMenu.addItem("Your booking", e ->{openBooking();});
+            userMenu.addItem("Logout", e -> {authenticatedUser.logout();});
             layout.add(avatar);
         } else {
             Anchor loginLink = new Anchor("login", "Sign in");
@@ -205,5 +205,8 @@ public class MainLayout extends AppLayout {
     private String getCurrentPageTitle() {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
+    }
+    private void openBooking() {
+        getUI().ifPresent(ui -> ui.navigate(UserBookingView.class));
     }
 }
