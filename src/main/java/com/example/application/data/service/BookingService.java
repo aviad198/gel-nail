@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,9 +27,10 @@ public class BookingService extends CrudService<Booking,Integer>{
     protected BookingRepository getRepository() {
         return bookingRepository;
     }
-/*    public List<Booking> findAllCompany(Company company) {
-        return bookingRepository.findCompanyBooking(company);
-    }*/
 
+    public boolean isBooked(Company company, LocalDateTime timeChosen) {
+        //return !bookingRepository.findByCompanyDate(company.getId(),timeChosen);
+        return bookingRepository.findByCompanyAndTimeChosen(company, timeChosen) != null;
+    }
 
 }

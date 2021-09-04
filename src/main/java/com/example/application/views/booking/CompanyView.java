@@ -61,6 +61,12 @@ public class CompanyView extends Div implements BeforeEnterObserver {
 
     private BookingService bookingService;
 
+    private VerticalLayout verticalLayout;
+
+    private Div wrapper;
+
+    private LocalDateTime today;
+
     public CompanyView(@Autowired CompanyService companyService, AuthenticatedUser authenticatedUser, UserService userService, BookingService bookingService) {
         this.companyService = companyService;
         this.authenticatedUser = authenticatedUser;
@@ -69,10 +75,22 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         addClassNames("cares-view", "flex", "flex-col", "h-full");
 
         // Create UI
-        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout = new VerticalLayout();
 
         createHeader(verticalLayout);
-        createScheduleLayout(verticalLayout);
+
+
+        //wrapper for sced
+        //TODO user nicer use of object
+        wrapper = new Div();
+        wrapper.setId("schedule-wrapper");
+        wrapper.setWidthFull();
+
+        today = LocalDate.now().atTime(7,0);
+
+
+        verticalLayout.add(wrapper);
+
 
 
         add(verticalLayout);
@@ -100,6 +118,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
             if (companyFromBackend.isPresent()) {
                 Company company = companyFromBackend.get();
                 populatePage(company);
+                createScheduleLayout();
                 //populateHeader();
             } else {
                 Notification.show(String.format("The requested Company was not found, ID = %d",
@@ -159,72 +178,63 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         editorLayoutDiv.add(buttonLayout);
     }*/
 
-    private void createScheduleLayout(VerticalLayout verticalLayout) {
-        Div wrapper = new Div();
-        wrapper.setId("grid-wrapper");
-        wrapper.setWidthFull();
-        verticalLayout.add(wrapper);
+    private void createScheduleLayout() {
+
         String[] dayOfWeek = {"sun", "mon", "tue", "wed", "thu", "fri", "sut"};
-        HorizontalLayout her = new HorizontalLayout();
+        HorizontalLayout scheduleHorizontalLayout = new HorizontalLayout();
 
-        DateTimePicker dateTimePicker = new DateTimePicker();
-        dateTimePicker.setLabel("Appointment day and time");
-        dateTimePicker.setValue(LocalDateTime.of(LocalDate.now(),LocalTime.of(LocalTime.now().getHour()+1, 0)));
-        dateTimePicker.setHelperText("Must be within 60 days from today");
-        //if now is before 7AM min time would be 7AM else - current time
-        dateTimePicker.setMin(LocalDateTime.now().isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0))) ? LocalDateTime.of(LocalDate.now(), LocalTime.of(7, 0)) : LocalDateTime.of(LocalDate.now(),LocalTime.of(LocalTime.now().getHour()+1, 0)));
-        //no more then 60 days ahead
-        dateTimePicker.setMax(LocalDateTime.now().plusDays(60));
-
-        Button time = new Button("Book!");
-
-        time.addClickListener(e -> {
-            Optional<User> authUser = authenticatedUser.get();
-            if (authUser.isPresent()) {
-                User user = userService.get(authUser.get().getId()).get();
-                System.out.println("Users: = " + userService.findAll());
-                System.out.println("Company: = " + companyService.findAll());
-                scheduleDialog.setTime(dateTimePicker.getValue());
-                scheduleDialog.setUser(user);
-                scheduleDialog.open();
-            } else {
-                Notification.show("Must signing to Book appointment");
-            }
-
+        Button prevWeekBtn = new Button("<");
+        prevWeekBtn.addClickListener(click->{
+            today = today.minusDays(7);
+            refreshSchedule();
+        });
+        Button nextWeekBtn = new Button(">");
+        nextWeekBtn.addClickListener(click->{
+            today = today.plusDays(7);
+            refreshSchedule();
 
         });
-        her.add(dateTimePicker);
-        her.add(time);
- /*       Button prevWeek = new Button("<");
-        Button nextWeek = new Button(">");
-        her.add(prevWeek);
-        //dayLayout.add(nextWeek);
-        int i = 0;
-        for (String day : dayOfWeek) {
+
+        scheduleHorizontalLayout.add(prevWeekBtn);
+
+        LocalDateTime weekStart = today.minusDays(today.getDayOfWeek().getValue());
+        //LocalDateTime weekStart = LocalDate.now().minusDays(LocalDate.now().getDayOfWeek().getValue()).atTime(7,0);
+        for (int day =0; day<7;day++) {
             VerticalLayout dayLayout = new VerticalLayout();
-            her.add(dayLayout);
-            LocalDate bookingDate = new LocalDate(LocalDate.now().getYear(), LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth());
-            Label dayLab = new Label(day +" "+LocalDate.now().getDayOfMonth()+"."+LocalDate.now().getMonth());
+            scheduleHorizontalLayout.add(dayLayout);
+            LocalDateTime bookingDay = weekStart.plusDays(day);
+            Label dayLab = new Label(dayOfWeek[day] +" "+bookingDay.getDayOfMonth() +"."+bookingDay.getMonthValue());
             dayLayout.add(dayLab);
-            for (int i = 7; i < 25; i++) {
-                Button time = new Button(LocalTime.of(i,0).toString());
-                if(!company.isBooked(i)){
-                time.addClickListener(e -> {
-                    Optional<User> maybeUser = authenticatedUser.get();
-                    if (maybeUser.isPresent()) {
-                        User user = maybeUser.get();
-                        scheduleDialog.setTime(time.getText());
+            for (int time = 6; time < 24; time++) {
+                LocalDateTime bookingDayTime = bookingDay.withHour(time);
+                Button bookingDateBtn = new Button(bookingDayTime.getHour()+":00");
+                if(bookingService.isBooked(company,bookingDayTime)||bookingDayTime.isBefore(LocalDateTime.now())){
+                    bookingDateBtn.setEnabled(false);
+                }
+                else {
+                    bookingDateBtn.addClickListener(click->{
+                    Optional<User> authUser = authenticatedUser.get();
+                    if (authUser.isPresent()) {
+                        User user = userService.get(authUser.get().getId()).get();
+                        scheduleDialog.setTime(bookingDayTime);
                         scheduleDialog.setUser(user);
                         scheduleDialog.open();
+                        refreshSchedule();
+                    } else {
+                        Notification.show("Must signing to Book appointment");
                     }
-
-
                 });}
-                dayLayout.add(time);
+                dayLayout.add(bookingDateBtn);
             }
         }
-        her.add(nextWeek);*/
-        wrapper.add(her);
+        scheduleHorizontalLayout.add(nextWeekBtn);
+        wrapper.add(scheduleHorizontalLayout);
+
+    }
+
+    private void refreshSchedule() {
+        wrapper.removeAll();
+        createScheduleLayout();
     }
 
    /* private void attachImageUpload(Upload upload, Image preview) {
@@ -245,10 +255,12 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         preview.setVisible(false);
     }*/
 
-  /*  private void refreshGrid() {
-        grid.select(null);
-        grid.getLazyDataView().refreshAll();
-    }*/
+
+    private void ScheduleLayout() {
+
+    }
+
+
 
     private void clearForm() {
         populatePage(null);

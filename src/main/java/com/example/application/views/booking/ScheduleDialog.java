@@ -25,7 +25,7 @@ public class ScheduleDialog extends Dialog {
     private CompanyService companyService;
     private BookingService bookingService;
 
-    LocalDateTime timeChosen;
+    LocalDateTime bookingDayTime;
     private User user;
     Label timeAndDateLabel;
 
@@ -45,7 +45,7 @@ public class ScheduleDialog extends Dialog {
             Booking newBooking = new Booking();
             newBooking.setCompany(company);
             newBooking.setUser(user);
-            newBooking.setTimeChosen(timeChosen);
+            newBooking.setTimeChosen(bookingDayTime);
             bookingService.update(newBooking);
             user.addBooking(newBooking);
             userService.update(user);
@@ -73,9 +73,9 @@ public class ScheduleDialog extends Dialog {
         add(formLayout);
     }
 
-    public void setTime(LocalDateTime localDateTime) {
-        timeChosen = localDateTime;
-        timeAndDateLabel.setText(timeChosen.toString().replace('T', ' '));
+    public void setTime(LocalDateTime bookingDayTime) {
+        this.bookingDayTime = bookingDayTime;
+        timeAndDateLabel.setText(bookingDayTime.toString().replace('T', ' '));
     }
 
     public void setUser(User user) {

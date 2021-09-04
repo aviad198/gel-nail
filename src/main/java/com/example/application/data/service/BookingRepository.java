@@ -9,6 +9,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking,Integer> {
+    //@Query("select b from Booking b WHERE b.company.id = company.id ")
+
+    List<Booking> findByCompany(Company company);
+
+    List<Booking> findByTimeChosen(LocalDateTime timeChosen);
+
+    Booking findByCompanyAndTimeChosen(Company company, LocalDateTime timeChosen);
 
 //    @Query("select b from Booking b " +
 //            "where (b.company.id) = (Company.id)")

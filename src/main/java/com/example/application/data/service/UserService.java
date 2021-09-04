@@ -33,4 +33,8 @@ public class UserService extends CrudService<User, Integer> {
     public User getUser(User user) {
         return repository.getOne(user.getId());
     }
+
+    public User findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
 }
