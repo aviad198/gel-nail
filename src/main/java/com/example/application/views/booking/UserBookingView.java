@@ -35,7 +35,7 @@ public class UserBookingView  extends VerticalLayout{
     private void updateList() {
         Optional<User> authUser = authenticatedUser.get();
         if (authUser.isPresent()) {
-            grid.setItems(bookingService.findAllByUserId(authUser.get().getId()));
+            grid.setItems(bookingService.findByUser(authUser.get()));
         } else {
             Notification.show("Must signing");
         }

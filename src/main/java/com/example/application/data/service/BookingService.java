@@ -2,6 +2,7 @@ package com.example.application.data.service;
 
 import com.example.application.data.entity.Booking;
 import com.example.application.data.entity.Company;
+import com.example.application.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class BookingService extends CrudService<Booking,Integer>{
     public List<Booking> findAll() {
         return bookingRepository.findAll();
     }
+
+    public List<Booking>findByUser(User user){return bookingRepository.findByUser(user);}
 
     @Override
     protected BookingRepository getRepository() {
