@@ -37,7 +37,7 @@ public class Address extends AbstractEntity {
 
 
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private Company company;
 

@@ -72,7 +72,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         this.companyService = companyService;
         this.authenticatedUser = authenticatedUser;
         this.userService = userService;
-        this.bookingService =bookingService;
+        this.bookingService = bookingService;
         addClassNames("cares-view", "flex", "flex-col", "h-full");
 
         // Create UI
@@ -87,20 +87,17 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         wrapper.setId("schedule-wrapper");
         wrapper.setWidthFull();
 
-        today = LocalDate.now().atTime(7,0);
+        today = LocalDate.now().atTime(7, 0);
 
 
         verticalLayout.add(wrapper);
 
 
-
         add(verticalLayout);
-
 
 
         // Configure Form
         binder = new BeanValidationBinder<>(Company.class);
-
 
 
     }
@@ -185,12 +182,12 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         HorizontalLayout scheduleHorizontalLayout = new HorizontalLayout();
 
         Button prevWeekBtn = new Button("<");
-        prevWeekBtn.addClickListener(click->{
+        prevWeekBtn.addClickListener(click -> {
             today = today.minusDays(7);
             refreshSchedule();
         });
         Button nextWeekBtn = new Button(">");
-        nextWeekBtn.addClickListener(click->{
+        nextWeekBtn.addClickListener(click -> {
             today = today.plusDays(7);
             refreshSchedule();
 
@@ -199,31 +196,31 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         scheduleHorizontalLayout.add(prevWeekBtn);
 
         LocalDateTime weekStart = today.minusDays(today.getDayOfWeek().getValue());
-        for (int day =0; day<7;day++) {
+        for (int day = 0; day < 7; day++) {
             VerticalLayout dayLayout = new VerticalLayout();
             scheduleHorizontalLayout.add(dayLayout);
             LocalDateTime bookingDay = weekStart.plusDays(day);
             bookingDay.format(DateTimeFormatter.ISO_LOCAL_DATE);
-            Label dayLab = new Label(dayOfWeek[day] +" "+bookingDay.getDayOfMonth() +"."+bookingDay.getMonthValue());
+            Label dayLab = new Label(dayOfWeek[day] + " " + bookingDay.getDayOfMonth() + "." + bookingDay.getMonthValue());
             dayLayout.add(dayLab);
             for (int time = 6; time < 24; time++) {
                 LocalDateTime bookingDayTime = bookingDay.withHour(time);
-                Button bookingDateBtn = new Button(bookingDayTime.getHour()+":00");
-                if(bookingService.isBooked(company,bookingDayTime)||bookingDayTime.isBefore(LocalDateTime.now())){
+                Button bookingDateBtn = new Button(bookingDayTime.getHour() + ":00");
+                if (bookingService.isBooked(company, bookingDayTime) || bookingDayTime.isBefore(LocalDateTime.now())) {
                     bookingDateBtn.setEnabled(false);
+                } else {
+                    bookingDateBtn.addClickListener(click -> {
+                        Optional<User> authUser = authenticatedUser.get();
+                        if (authUser.isPresent()) {
+                            User user = userService.get(authUser.get().getId()).get();
+                            scheduleDialog.setTime(bookingDayTime);
+                            scheduleDialog.setUser(user);
+                            scheduleDialog.open();
+                        } else {
+                            Notification.show("Must signing to Book appointment");
+                        }
+                    });
                 }
-                else {
-                    bookingDateBtn.addClickListener(click->{
-                    Optional<User> authUser = authenticatedUser.get();
-                    if (authUser.isPresent()) {
-                        User user = userService.get(authUser.get().getId()).get();
-                        scheduleDialog.setTime(bookingDayTime);
-                        scheduleDialog.setUser(user);
-                        scheduleDialog.open();
-                    } else {
-                        Notification.show("Must signing to Book appointment");
-                    }
-                });}
                 dayLayout.add(bookingDateBtn);
             }
         }
@@ -263,13 +260,13 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         this.company = company;
         binder.readBean(this.company);
         if (company == null) {
-            this.companyImage.setSrc("");
+           // this.companyImage.setSrc("");
         } else {
-            companyImage = new Image();
-           this.companyImage.setSrc(company.getMainImageURL());
-            companyImage.setVisible(true);
-           companyHeader.setCompanyHeader(company.getName(),company.getMainImageURL(),company.getDescription(),company.getAddress(),company.getRating());;
-           scheduleDialog = new ScheduleDialog(userService,companyService,bookingService,company,this);
+//            companyImage = new Image();
+//            //this.companyImage.setSrc(company.getMainImageURL());
+//            companyImage.setVisible(true);
+            companyHeader.setCompanyHeader(company.getName(), company.getMainImageURL(), company.getDescription(), company.getAddress(), company.getRating());
+            scheduleDialog = new ScheduleDialog(userService, companyService, bookingService, company, this);
         }
 
     }

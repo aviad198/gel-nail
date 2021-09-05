@@ -30,6 +30,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 
@@ -87,7 +88,7 @@ public class RegisterForm extends VerticalLayout {
     private CompanyService companyService;
     private AddressService addressService;
 
-    public RegisterForm(UserService userService, CompanyService companyService, AddressService addressService) {
+    public RegisterForm(@Autowired  UserService userService,@Autowired CompanyService companyService,@Autowired AddressService addressService) {
         this.userService = userService;
         this.companyService = companyService;
         this.addressService = addressService;
@@ -159,17 +160,20 @@ public class RegisterForm extends VerticalLayout {
             if (userTypeCB.getValue()) {
                 Address address = new Address();
                 addressBinder.writeBean(address);
+                addressService.update(address);
 
                 Company company = new Company();
                 companyBinder.writeBean(company);
+                companyService.update(company);
 
                 user.setRoles(Collections.singleton(Role.ADMIN));
                 company.setAddress(address);
                 address.setCompany(company);
                 user.setCompany(company);
 
-                companyService.update(company);
                 addressService.update(address);
+                companyService.update(company);
+
             }
             // Call backend to store the data
             userService.update(user);
