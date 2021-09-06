@@ -1,18 +1,11 @@
 package com.example.application.data.service;
 
-import com.example.application.data.entity.*;
+import com.example.application.data.entity.Contact;
 import org.springframework.stereotype.Service;
-import org.vaadin.artur.exampledata.DataType;
-import org.vaadin.artur.exampledata.ExampleDataGenerator;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ContactService {
@@ -56,11 +49,12 @@ public class ContactService {
         contactRepository.save(contact);
     }
 
+/*
     @PostConstruct
     public void populateTestData() {
 
         int seed = 123;
-
+        /*
         if (addressRepository.count() == 0) {
             ExampleDataGenerator<Address> addressRepositoryGenerator = new ExampleDataGenerator<>(
                     Address.class, LocalDateTime.of(2021, 8, 31, 0, 0, 0));
@@ -78,21 +72,31 @@ public class ContactService {
             List<User> users = userRepository.findAll();
             Company company1 = new Company();
             company1.setRating(1);
-            company1.setName("company1");
+            company1.setName("medical nail");
             company1.setAddress(addresses.get(r.nextInt(addresses.size())));
-            company1.setDescription("desc1");
-            company1.setMainImageURL("https://picsum.photos/200");
+            company1.setDescription("Manicure and medical pedicure");
+            company1.setMainImageURL("https://stayglam.com/wp-content/uploads/2018/12/Black-and-Pink-Glitter.jpg");
             company1.setMail("company1@comapny1.com");
             companyRepository.save(company1);
 
             Company company2 = new Company();
-            company2.setRating(1);
-            company2.setName("company2");
+            company2.setRating(3);
+            company2.setName("The beauty of the gel");
             company2.setAddress(addresses.get(r.nextInt(addresses.size())));
-            company2.setDescription("desc2");
-            company2.setMainImageURL("https://picsum.photos/200");
+            company2.setDescription("Gel nail polish, nail construction and manicure");
+            company2.setMainImageURL("https://i.pinimg.com/originals/15/6e/e5/156ee52dcdc2a7555ca2c8714e31b147.jpg");
             company2.setMail("company2@comapny2.com");
             companyRepository.save(company2);
+
+            Company company3 = new Company();
+            company3.setRating(4);
+            company3.setName("Stunning gel");
+            company3.setAddress(addresses.get(r.nextInt(addresses.size())));
+            company3.setDescription("Our services are pedicures, manicures and gel nail polishes");
+            company3.setMainImageURL("https://cdn.shopify.com/s/files/1/0962/4412/products/bluesky-gel-polish-blue-bamboo-neon32-bright-cobalt-neon-solid-cosmetics-finger-nail-916_1024x1024_65a21905-012b-4021-b84a-08bcdeb2f4c8_600x.jpg?v=1614951718");
+            company3.setMail("company3@comapny3.com");
+            companyRepository.save(company3);
+
         }
 
 
@@ -123,4 +127,5 @@ public class ContactService {
             }
         }
 
-    }
+    }*/
+}

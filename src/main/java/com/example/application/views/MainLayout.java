@@ -3,19 +3,11 @@ package com.example.application.views;
 import com.example.application.data.Role;
 import com.example.application.data.entity.User;
 import com.example.application.security.AuthenticatedUser;
-import com.example.application.views.addressform.AddressFormView;
-import com.example.application.views.booking.CompanyView;
 import com.example.application.views.booking.UserBookingView;
-import com.example.application.views.checkoutform.CheckoutFormView;
 import com.example.application.views.companyarea.CompanyBookingView;
-import com.example.application.views.creditcardform.CreditCardFormView;
-import com.example.application.views.dashboard.DashboardView;
 import com.example.application.views.info.CompanyInfo;
-
 import com.example.application.views.info.UserInfo;
-import com.example.application.views.map.MapView;
 import com.example.application.views.nailsalons.NailSalonsView;
-import com.example.application.views.personform.PersonFormView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.Text;
@@ -113,7 +105,7 @@ public class MainLayout extends AppLayout {
                 userMenu.addItem("Company profile", e -> {
                     openCompanyProfile();
                 });
-                userMenu.addItem("Booking", e -> {
+                userMenu.addItem("Company Booking", e -> {
                     openCompanyBooking();
                 });
             }
@@ -164,19 +156,19 @@ public class MainLayout extends AppLayout {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
                 new MenuItemInfo("Nail Salons", "la la-th-list", NailSalonsView.class), //
 
-                new MenuItemInfo("Map", "la la-map", MapView.class), //
+             //   new MenuItemInfo("Map", "la la-map", MapView.class), //
 
-                new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
+             //   new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
 
-                new MenuItemInfo("Address Form", "la la-map-marker", AddressFormView.class), //
+              //  new MenuItemInfo("Address Form", "la la-map-marker", AddressFormView.class), //
 
-                new MenuItemInfo("Credit Card Form", "", CreditCardFormView.class), //
+             //   new MenuItemInfo("Credit Card Form", "", CreditCardFormView.class), //
 
-                new MenuItemInfo("Cares", "la la-columns", CompanyView.class), //
+             //   new MenuItemInfo("Cares", "la la-columns", CompanyView.class), //
 
-                new MenuItemInfo("Checkout Form", "", CheckoutFormView.class), //
+             //   new MenuItemInfo("Checkout Form", "", CheckoutFormView.class), //
 
-                new MenuItemInfo("Dashboard", "la la-chart-area", DashboardView.class), //
+             //   new MenuItemInfo("Dashboard", "la la-chart-area", DashboardView.class), //
 
         };
         List<Tab> tabs = new ArrayList<>();

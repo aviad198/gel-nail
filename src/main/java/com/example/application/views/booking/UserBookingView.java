@@ -5,20 +5,22 @@ import com.example.application.data.entity.User;
 import com.example.application.data.service.BookingService;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.MainLayout;
+import com.example.application.views.nailsalons.NailSalonsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import java.util.Optional;
-@PermitAll
+@RolesAllowed({"admin","user"})
 @Route(value = "user-booking-view", layout = MainLayout.class)
-public class UserBookingView  extends VerticalLayout{
+public class UserBookingView  extends VerticalLayout implements BeforeEnterObserver {
 
     private Grid<Booking> grid = new Grid<>(Booking.class);
     private BookingService bookingService;
@@ -37,14 +39,10 @@ public class UserBookingView  extends VerticalLayout{
     private Component createTitle() {
         return new H3("My Bookings");
     }
+
     private void updateList() {
         Optional<User> authUser = authenticatedUser.get();
-        if (authUser.isPresent()) {
-            grid.setItems(bookingService.findByUser(authUser.get()));
-        } else {
-            Notification.show("Must signing");
-        }
-
+        grid.setItems(bookingService.findByUser(authUser.get()));
     }
 
     private void configureGrid() {
@@ -55,14 +53,9 @@ public class UserBookingView  extends VerticalLayout{
         grid.setColumns("timeChosen");
         grid.addColumn(booking -> {
             return booking.getCompany().getName();
-        }).setHeader("Company");
-
-
+        }).setHeader("Company").setSortable(true);
         grid.addComponentColumn(item -> createRemoveButton(grid, item)).setHeader("");
-
         grid.setSelectionMode(Grid.SelectionMode.NONE);
-
-
     }
 
     private Button createRemoveButton(Grid<Booking> grid, Booking item) {
@@ -74,5 +67,13 @@ public class UserBookingView  extends VerticalLayout{
             this.bookingService.delete(item.getId());
         });
         return button;
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        Optional<User> authUser = authenticatedUser.get();
+        if (!authUser.isPresent()) {
+            event.forwardTo(NailSalonsView.class);
+        }
     }
 }

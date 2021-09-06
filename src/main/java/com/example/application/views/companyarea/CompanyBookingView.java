@@ -55,9 +55,9 @@ public class CompanyBookingView extends VerticalLayout  implements BeforeEnterOb
         grid.removeColumnByKey("company");
         grid.removeColumnByKey("user");
         grid.setColumns("timeChosen");
-        grid.addColumn(booking ->{return booking.getUser().getFirstName();}).setHeader("First Name");
-        grid.addColumn(booking -> {return booking.getUser().getLastName();}).setHeader("Last Name");
-        grid.addColumn(booking -> {return booking.getUser().getEmail();}).setHeader("Email");
+        grid.addColumn(booking ->{return booking.getUser().getFirstName();}).setHeader("First Name").setSortable(true);
+        grid.addColumn(booking -> {return booking.getUser().getLastName();}).setHeader("Last Name").setSortable(true);
+        grid.addColumn(booking -> {return booking.getUser().getEmail();}).setHeader("Email").setSortable(true);
     }
     @Override
     public void beforeEnter(BeforeEnterEvent event) {

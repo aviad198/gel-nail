@@ -17,8 +17,6 @@ import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
@@ -37,8 +35,8 @@ import java.util.List;
 @JsModule("./views/nailsalons/nail-salons-view.ts")
 public class NailSalonsView extends LitTemplate implements HasComponents, HasStyle {
 
-    @Id
-    private Select<String> sortBy;
+    //@Id
+   // private Select<String> sortBy;
     private TextField location = new TextField();
     private TextField businessName = new TextField();
     private ComboBox<TypeService> services = new ComboBox<>();
@@ -59,45 +57,41 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         //add CSS/JS files
         addClassNames("nail-salons-view", "flex", "flex-col", "h-full");
         //configure sort
-        sortBy.setItems("Popularity", "Newest first", "Oldest first");
-        sortBy.setValue("Popularity");
+        //sortBy.setItems("Popularity", "Newest first", "Oldest first");
+       // sortBy.setValue("Popularity");
 
-        configureFilter(serviceService);
+        configureFilter();
+        add(configureLayout());
+    }
 
-        HorizontalLayout layoutSearch = new HorizontalLayout();
+    private VerticalLayout configureLayout(){
         VerticalLayout layout = new VerticalLayout();
-
+        HorizontalLayout layoutSearch = new HorizontalLayout();
         layoutSearch.add(businessName, location, startSearch);
         layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
-
         layout.add(layoutSearch);
 
         companyList = companyService.findAll();
         imageGrid = new ImageGrid(companyList);
         layout.add(imageGrid);
-        add(layout);
-        startSearch.addClickListener(e ->updateList1());
+        layout.setWidthFull();
+
+        return layout;
     }
 
-    private void configureFilter(ServiceService serviceService) {
+    private void configureFilter() {
         location.setLabel("Location");
         location.setPlaceholder("Where?...");
         location.setClearButtonVisible(true);
         location.setValueChangeMode(ValueChangeMode.LAZY);
       //  location.addValueChangeListener(e -> updateByLocation());
 
-      //  serviceList = serviceService.findAll();
-       // services.setItems(serviceList);
-       // services.setItemLabelGenerator(TypeService::getName);
-
-       // services.setClearButtonVisible(true);
-    //    services.setLabel("Services");
-
         businessName.setLabel("Business name");
         businessName.setClearButtonVisible(true);
         businessName.setValueChangeMode(ValueChangeMode.LAZY);
  //       businessName.addValueChangeListener(e -> updateList());
 
+        startSearch.addClickListener(e ->updateList1());
 
 
     }
