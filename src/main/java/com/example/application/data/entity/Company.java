@@ -22,7 +22,7 @@ public class Company extends AbstractEntity {
     private String mail ;
 
     private String mainImageURL = "https://picsum.photos/200";
-    private int rating ;
+    private int rating = 0 ;
 
     private String description;
 
