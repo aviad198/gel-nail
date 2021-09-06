@@ -19,7 +19,7 @@ public class ImageGrid extends VerticalLayout {
     public void UpdateGrid(List<Company> companyList) {
         removeAll();
         for(Company company : companyList){
-            ImageCard item = new ImageCard(company.getName(), company.getMainImageURL());
+            ImageCard item = new ImageCard(company.getName(),company.getMainImageURL(),company.getDescription(),company.getAddress(),company.getRating());
             item.getElement().addEventListener("click", e -> openCompany(company.getId()));
             add(item);
         }

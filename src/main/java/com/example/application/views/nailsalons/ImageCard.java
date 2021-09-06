@@ -32,7 +32,7 @@ public class ImageCard extends LitTemplate {
     public ImageCard(String text, String url) {
         this.image.setSrc(url);
         this.image.setAlt(text);
-        this.header.setText("Title");
+        this.header.setText("text");
         this.subtitle.setText("Card subtitle");
         this.text.setText(
                 "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.");

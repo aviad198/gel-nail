@@ -1,7 +1,8 @@
 package com.example.application.data.generator;
 
 import com.example.application.data.Role;
-import com.example.application.data.entity.*;
+import com.example.application.data.entity.Company;
+import com.example.application.data.entity.User;
 import com.example.application.data.service.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.slf4j.Logger;
@@ -9,17 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.vaadin.artur.exampledata.DataType;
-import org.vaadin.artur.exampledata.ExampleDataGenerator;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringComponent
 public class DataGenerator {
@@ -91,6 +84,8 @@ public class DataGenerator {
             if(companyList.size()>0)
                 companyList.get(0).setAdmin(admin);
             companyRepository.save(companyList.get(0));
+            admin.setCompany(companyList.get(0));
+            userRepository.save(admin);
 
             if(companyList.size()>1)
                 companyList.get(1).setAdmin(user);

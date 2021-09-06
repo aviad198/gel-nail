@@ -14,7 +14,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
@@ -25,7 +24,10 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.*;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.binder.ValidationResult;
+import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -77,12 +79,16 @@ public class RegisterForm extends VerticalLayout {
 
     private EmailField companyEmail = new EmailField("Email address");
 
+    private TextField  street = new TextField("Street address");
+    private TextField  city = new TextField("Citys");
+    private TextField  country = new TextField("Country");
+/*
     private ComboBox<String>  street = new ComboBox<>("Street address");
 
     private ComboBox<String> city = new ComboBox<>("City");
 
     private ComboBox<String>   country = new ComboBox<>("Country");
-
+*/
     private TextField description = new TextField("Description");
 
     private CompanyService companyService;
@@ -169,11 +175,11 @@ public class RegisterForm extends VerticalLayout {
                 user.setRoles(Collections.singleton(Role.ADMIN));
                 company.setAddress(address);
                 address.setCompany(company);
-                user.setCompany(company);
+
 
                 addressService.update(address);
                 companyService.update(company);
-
+                user.setCompany(company);
             }
             // Call backend to store the data
             userService.update(user);
@@ -288,7 +294,7 @@ public class RegisterForm extends VerticalLayout {
     private Component createAddressLayout() {
         FormLayout addressForm = new FormLayout();
         addressBinder = new BeanValidationBinder<>(Address.class);
-
+/*
         street.setItems("HaYasmin", "Shalom", "Ben Guiron", "Malikshoa");
         street.addCustomValueSetListener(
                 event -> street.setValue(event.getDetail()));
@@ -298,7 +304,10 @@ public class RegisterForm extends VerticalLayout {
         country.setItems("Israel", "United States", "India");
         country.addCustomValueSetListener(
                 event -> country.setValue(event.getDetail()));
-
+*/
+        street.setRequired(true);
+        city.setRequired(true);
+        country.setRequired(true);
 
         addressForm.add(street, city, country);
 

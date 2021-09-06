@@ -1,13 +1,14 @@
 package com.example.application.views.booking;
 
 import com.example.application.data.entity.Booking;
-import com.example.application.data.entity.Company;
 import com.example.application.data.entity.User;
 import com.example.application.data.service.BookingService;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.MainLayout;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -29,11 +30,13 @@ public class UserBookingView  extends VerticalLayout{
         addClassNames("list-view");
         setSizeFull();
         configureGrid();
-
+        add(createTitle());
         add(grid);
         updateList();
     }
-
+    private Component createTitle() {
+        return new H3("My Bookings");
+    }
     private void updateList() {
         Optional<User> authUser = authenticatedUser.get();
         if (authUser.isPresent()) {
@@ -50,13 +53,12 @@ public class UserBookingView  extends VerticalLayout{
         grid.removeColumnByKey("company");
         grid.removeColumnByKey("user");
         grid.setColumns("timeChosen");
-        grid.addColumn(contact -> {
-            Company company = contact.getCompany();
-            return company == null ? "-" : company.getName();
+        grid.addColumn(booking -> {
+            return booking.getCompany().getName();
         }).setHeader("Company");
 
-        grid.addComponentColumn(item -> createRemoveButton(grid, item))
-                .setHeader("");
+
+        grid.addComponentColumn(item -> createRemoveButton(grid, item)).setHeader("");
 
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 

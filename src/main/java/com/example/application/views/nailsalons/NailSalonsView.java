@@ -2,6 +2,7 @@ package com.example.application.views.nailsalons;
 
 import com.example.application.data.entity.Company;
 import com.example.application.data.entity.TypeService;
+import com.example.application.data.service.AddressService;
 import com.example.application.data.service.CompanyService;
 import com.example.application.data.service.ServiceService;
 import com.example.application.views.MainLayout;
@@ -44,15 +45,17 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private Button startSearch = new Button("Search");
     private CompanyService companyService;
     private ServiceService serviceService;
+    private AddressService addressService;
     private ImageGrid imageGrid;
     List<Company> companyList;
     List<TypeService> serviceList;
     FormLayout layoutSearch = new FormLayout();
 
-    public NailSalonsView(CompanyService companyService, ServiceService serviceService) {
+    public NailSalonsView(CompanyService companyService, ServiceService serviceService, AddressService addressService) {
         //get services
         this.companyService = companyService;
         this.serviceService = serviceService;
+        this.addressService = addressService;
         //add CSS/JS files
         addClassNames("nail-salons-view", "flex", "flex-col", "h-full");
         //configure sort
@@ -64,7 +67,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         HorizontalLayout layoutSearch = new HorizontalLayout();
         VerticalLayout layout = new VerticalLayout();
 
-        layoutSearch.add(businessName, services, location, startSearch);
+        layoutSearch.add(businessName, location, startSearch);
         layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
 
         layout.add(layoutSearch);
@@ -73,6 +76,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         imageGrid = new ImageGrid(companyList);
         layout.add(imageGrid);
         add(layout);
+        startSearch.addClickListener(e ->updateList1());
     }
 
     private void configureFilter(ServiceService serviceService) {
@@ -80,24 +84,43 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         location.setPlaceholder("Where?...");
         location.setClearButtonVisible(true);
         location.setValueChangeMode(ValueChangeMode.LAZY);
-        location.addValueChangeListener(e -> updateList());
+      //  location.addValueChangeListener(e -> updateByLocation());
 
-        serviceList = serviceService.findAll();
-        services.setItems(serviceList);
-        services.setItemLabelGenerator(TypeService::getName);
+      //  serviceList = serviceService.findAll();
+       // services.setItems(serviceList);
+       // services.setItemLabelGenerator(TypeService::getName);
 
-        services.setClearButtonVisible(true);
-        services.setLabel("Services");
+       // services.setClearButtonVisible(true);
+    //    services.setLabel("Services");
 
         businessName.setLabel("Business name");
         businessName.setClearButtonVisible(true);
         businessName.setValueChangeMode(ValueChangeMode.LAZY);
-        businessName.addValueChangeListener(e -> updateList());
+ //       businessName.addValueChangeListener(e -> updateList());
+
+
 
     }
 
     private void updateList() {
-        companyList = companyService.findAll();
+        companyList = companyService.findAll(location.getValue());
         imageGrid.UpdateGrid(companyList);
     }
+
+    private void updateList1() {
+        companyList = companyService.findAll(businessName.getValue());
+        List<Company> tempCompanyList = addressService.findAll(location.getValue());
+        tempCompanyList.removeAll(companyList);
+        companyList.removeAll(tempCompanyList);
+        imageGrid.UpdateGrid(companyList);
+    }
+    private void updateByLocation() {
+        companyList = addressService.findAll(location.getValue());
+        imageGrid.UpdateGrid(companyList);
+    }
+    private void updateByBusiness() {
+        companyList = addressService.findAll(businessName.getValue());
+        imageGrid.UpdateGrid(companyList);
+    }
+
 }

@@ -1,8 +1,6 @@
 package com.example.application.data.entity;
 
 import com.example.application.data.AbstractEntity;
-import com.vaadin.flow.component.button.Button;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -10,7 +8,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 @Entity
 public class Company extends AbstractEntity {
@@ -22,16 +19,16 @@ public class Company extends AbstractEntity {
     @NotNull
     @NotEmpty
     @Column(unique=true)
-    private String mail = "";
+    private String mail ;
 
-    private String mainImageURL;
-    private int rating;
+    private String mainImageURL = "https://picsum.photos/200";
+    private int rating ;
 
     private String description;
 
     //to remove
-    @OneToMany(mappedBy = "company")
-    private List<Contact> employees = new LinkedList<>();
+  //  @OneToMany(mappedBy = "company")
+   // private List<Contact> employees = new LinkedList<>();
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -46,9 +43,7 @@ public class Company extends AbstractEntity {
     private List<Booking> bookings = new LinkedList<>();
 
 
-    public List<Contact> getEmployees() {
-        return employees;
-    }
+   // public List<Contact> getEmployees() {return employees;}
 
 
     public String getName() {
@@ -91,9 +86,7 @@ public class Company extends AbstractEntity {
         this.description = description;
     }
 
-    public void setEmployees(List<Contact> employees) {
-        this.employees = employees;
-    }
+   // public void setEmployees(List<Contact> employees) {this.employees = employees;}
 
     public User getAdmin() {
         return admin;

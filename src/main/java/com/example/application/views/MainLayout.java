@@ -1,13 +1,18 @@
 package com.example.application.views;
 
+import com.example.application.data.Role;
 import com.example.application.data.entity.User;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.addressform.AddressFormView;
 import com.example.application.views.booking.CompanyView;
 import com.example.application.views.booking.UserBookingView;
 import com.example.application.views.checkoutform.CheckoutFormView;
+import com.example.application.views.companyarea.CompanyBookingView;
 import com.example.application.views.creditcardform.CreditCardFormView;
 import com.example.application.views.dashboard.DashboardView;
+import com.example.application.views.info.CompanyInfo;
+
+import com.example.application.views.info.UserInfo;
 import com.example.application.views.map.MapView;
 import com.example.application.views.nailsalons.NailSalonsView;
 import com.example.application.views.personform.PersonFormView;
@@ -102,8 +107,16 @@ public class MainLayout extends AppLayout {
             avatar.addClassNames("ms-auto", "me-m");
             ContextMenu userMenu = new ContextMenu(avatar);
             userMenu.setOpenOnClick(true);
-            userMenu.addItem("Your profile");
+            userMenu.addItem("Your profile",e ->{openCProfile();});
             userMenu.addItem("Your booking", e ->{openBooking();});
+            if (maybeUser.get().getRoles().contains(Role.ADMIN)) {
+                userMenu.addItem("Company profile", e -> {
+                    openCompanyProfile();
+                });
+                userMenu.addItem("Booking", e -> {
+                    openCompanyBooking();
+                });
+            }
             userMenu.addItem("Logout", e -> {authenticatedUser.logout();});
             layout.add(avatar);
         } else {
@@ -209,5 +222,15 @@ public class MainLayout extends AppLayout {
     }
     private void openBooking() {
         getUI().ifPresent(ui -> ui.navigate(UserBookingView.class));
+    }
+    private void openCompanyProfile() {
+        getUI().ifPresent(ui -> ui.navigate(CompanyInfo.class));
+    }
+
+    private void openCProfile() {
+        getUI().ifPresent(ui -> ui.navigate(UserInfo.class));
+    }
+    private void openCompanyBooking() {
+        getUI().ifPresent(ui -> ui.navigate(CompanyBookingView.class));
     }
 }
