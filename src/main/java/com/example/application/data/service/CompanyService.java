@@ -37,10 +37,18 @@ public class CompanyService extends CrudService<Company,Integer> {
         return companyRepository.sortByRating();
     }
     public List<Company> findAllSortByNameAZ(){
-        return companyRepository.sortByName();
+        return companyRepository.sortByNameAZ();
     }
     public List<Company> findAllSortByNameZA(){
-        return companyRepository.sortByName2();
+        return companyRepository.sortByNameZA();
+    }
+
+    public List<Company> findByAddress(String stringFilter) {
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return companyRepository.findAll();
+        } else {
+            return companyRepository.searchByAddress(stringFilter);
+        }
     }
 }
 

@@ -18,11 +18,16 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
     List<Company> sortByRating();
 
     @Query("select c from Company c ORDER BY (c.name) DESC")
-    List<Company> sortByName();
+    List<Company> sortByNameAZ();
 
     @Query("select c from Company c ORDER BY (c.name) ASC")
-    List<Company> sortByName2();
+    List<Company> sortByNameZA();
 
+    @Query("select c from Company c " +
+            "where lower(c.address.street) like lower(concat('%', :searchTerm, '%')) " +
+            "or lower(c.address.city) like lower(concat('%', :searchTerm, '%')) " +
+            "or lower(c.address.country) like lower(concat('%', :searchTerm, '%'))")
+    List<Company> searchByAddress(@Param("searchTerm") String searchTerm);
 
 
 
