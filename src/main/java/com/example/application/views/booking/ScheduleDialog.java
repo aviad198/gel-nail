@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 public class ScheduleDialog extends Dialog {
 
     private FormLayout formLayout;
-    private BeanValidationBinder<Contact> binder;
 
     private UserService userService;
     private CompanyService companyService;

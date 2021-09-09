@@ -82,10 +82,12 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         location.setPlaceholder("Where?...");
         location.setClearButtonVisible(true);
         location.setValueChangeMode(ValueChangeMode.LAZY);
+        location.addValueChangeListener(e->updateList());
 
         businessName.setLabel("Business name");
         businessName.setClearButtonVisible(true);
         businessName.setValueChangeMode(ValueChangeMode.LAZY);
+        businessName.addValueChangeListener(e->updateList());
 
         startSearch.addClickListener(e ->updateList());
     }
@@ -99,7 +101,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
 
     private void updateBySort(String s) {
         List<Company> tempList;
-        switch(s) {
+        switch(s == null? "a-z" : s) {
             case "a-z":
                 tempList = companyService.findAllSortByNameAZ();
                 break;
@@ -116,7 +118,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     }
 
     private List<Company> updateBySort2(String s) {
-        switch(s) {
+        switch(s == null? "a-z" : s) {
             case "a-z":
                 return companyService.findAllSortByNameAZ();
             case "z-a":

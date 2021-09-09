@@ -80,7 +80,7 @@ public class RegisterForm extends VerticalLayout {
     private EmailField companyEmail = new EmailField("Email address");
 
     private TextField  street = new TextField("Street address");
-    private TextField  city = new TextField("Citys");
+    private TextField  city = new TextField("City");
     private TextField  country = new TextField("Country");
 /*
     private ComboBox<String>  street = new ComboBox<>("Street address");

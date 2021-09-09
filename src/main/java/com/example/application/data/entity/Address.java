@@ -32,11 +32,6 @@ public class Address extends AbstractEntity {
     private String country="";
 
 
-    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
-    private Contact employees;
-
-
-
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "company_id")
     private Company company;
@@ -72,9 +67,6 @@ public class Address extends AbstractEntity {
     }
     public void setCountry(String country) {
         this.country = country;
-    }
-    public Contact getEmployees() {
-        return employees;
     }
     public Company getCompany() {
         return company;

@@ -25,7 +25,6 @@ public class DataGenerator {
     private User user, admin1, admin2, admin3;
     @Bean
     public CommandLineRunner loadData(PasswordEncoder passwordEncoder,
-                                      SampleFoodProductRepository sampleFoodProductRepository,
                                       UserRepository userRepository,
                                       CompanyRepository companyRepository,
                                       BookingRepository bookingRepository,
@@ -34,10 +33,7 @@ public class DataGenerator {
                                       AddressService addressService) {
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
-            if (sampleFoodProductRepository.count() != 0L) {
-                logger.info("Using existing database");
-                return;
-            }
+
             int seed = 123;
 
             logger.info("Generating demo data");

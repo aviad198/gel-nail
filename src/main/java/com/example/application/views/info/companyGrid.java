@@ -2,10 +2,8 @@ package com.example.application.views.info;
 
 import com.example.application.data.entity.Address;
 import com.example.application.data.entity.Company;
-import com.example.application.data.entity.Contact;
 import com.example.application.data.entity.User;
 import com.example.application.data.service.CompanyService;
-import com.example.application.data.service.ContactService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
