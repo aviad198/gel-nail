@@ -1,4 +1,4 @@
-package com.example.application.views.companyarea;
+package com.example.application.views.booking;
 
 import com.example.application.data.entity.Booking;
 import com.example.application.data.entity.Company;
@@ -54,10 +54,12 @@ public class CompanyBookingView extends VerticalLayout  implements BeforeEnterOb
         grid.setSizeFull();
         grid.removeColumnByKey("company");
         grid.removeColumnByKey("user");
+        grid.removeColumnByKey("comment");
         grid.setColumns("timeChosen");
-        grid.addColumn(booking ->{return booking.getUser().getFirstName();}).setHeader("First Name").setSortable(true);
-        grid.addColumn(booking -> {return booking.getUser().getLastName();}).setHeader("Last Name").setSortable(true);
-        grid.addColumn(booking -> {return booking.getUser().getEmail();}).setHeader("Email").setSortable(true);
+        grid.addColumn(booking -> booking.getUser().getFirstName()).setHeader("First Name").setSortable(true);
+        grid.addColumn(booking -> booking.getUser().getLastName()).setHeader("Last Name").setSortable(true);
+        grid.addColumn(booking -> booking.getUser().getEmail()).setHeader("Email").setSortable(true);
+        grid.addColumn(Booking::getComment).setHeader("comment").setSortable(true);
     }
     @Override
     public void beforeEnter(BeforeEnterEvent event) {

@@ -1,22 +1,16 @@
 package com.example.application.views.booking;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-
 import com.example.application.data.entity.Company;
 import com.example.application.data.entity.User;
 import com.example.application.data.service.BookingService;
 import com.example.application.data.service.CompanyService;
-
 import com.example.application.data.service.UserService;
 import com.example.application.security.AuthenticatedUser;
+import com.example.application.views.MainLayout;
 import com.example.application.views.nailsalons.NailSalonsView;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -24,14 +18,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.PageTitle;
-import com.example.application.views.MainLayout;
 
-import com.vaadin.flow.component.html.Image;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @PageTitle("Book a Care")
 @Route(value = "Company/:companyID?/:action?(edit)", layout = MainLayout.class)
@@ -203,7 +198,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
             bookingDay.format(DateTimeFormatter.ISO_LOCAL_DATE);
             Label dayLab = new Label(dayOfWeek[day] + " " + bookingDay.getDayOfMonth() + "." + bookingDay.getMonthValue());
             dayLayout.add(dayLab);
-            for (int time = 6; time < 24; time++) {
+            for (int time = 8; time < 20; time++) {
                 LocalDateTime bookingDayTime = bookingDay.withHour(time);
                 Button bookingDateBtn = new Button(bookingDayTime.getHour() + ":00");
                 if (bookingService.isBooked(company, bookingDayTime) || bookingDayTime.isBefore(LocalDateTime.now())) {

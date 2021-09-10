@@ -47,4 +47,15 @@ public class ImageCard extends LitTemplate {
         this.text.setText(description);
         this.badge.setText("*".repeat(rating));
     }
+    /*
+    public ImageCard(String name, String mainImageURL,String nameImage, String description, Address address, int rating) {
+        this.image.setSrc(mainImageURL);
+        this.image.setAlt(nameImage);
+        this.header.setText(name);
+        this.subtitle.setText(address==null? "" : address.toString());
+        this.text.setText(description);
+        this.badge.setText("*".repeat(rating));
+    }
+
+     */
 }

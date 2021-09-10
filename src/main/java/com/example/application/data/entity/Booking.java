@@ -2,8 +2,9 @@ package com.example.application.data.entity;
 
 import com.example.application.data.AbstractEntity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +22,9 @@ public class Booking extends AbstractEntity {
 
     //@NotEmpty(message = "must have a date and time")
     private LocalDateTime timeChosen;
+
+    private String comment;
+
 
     public Booking() {
 
@@ -56,4 +60,10 @@ public class Booking extends AbstractEntity {
         this.timeChosen=timeChosen;
     }
 
+    public String getComment() {
+        return comment;
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }

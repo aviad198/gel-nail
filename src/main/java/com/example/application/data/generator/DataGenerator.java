@@ -12,10 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.vaadin.artur.exampledata.DataType;
-import org.vaadin.artur.exampledata.ExampleDataGenerator;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +26,6 @@ public class DataGenerator {
                                       UserRepository userRepository,
                                       CompanyRepository companyRepository,
                                       BookingRepository bookingRepository,
-                                      ServiceRepository serviceRepository,
                                       AddressRepository addressRepository,
                                       AddressService addressService) {
         return args -> {
@@ -41,17 +38,35 @@ public class DataGenerator {
 
             if (addressRepository.count() == 0) {
                 logger.info("... generating 10 addresses entities...");
+                /*
                 ExampleDataGenerator<Address> addressRepositoryGenerator = new ExampleDataGenerator<>(
                         Address.class, LocalDateTime.of(2021, 8, 31, 0, 0, 0));
-                addressRepositoryGenerator.setData(Address::setState, DataType.STATE);
+               // addressRepositoryGenerator.setData(Address::setState, DataType.STATE);
                 addressRepositoryGenerator.setData(Address::setCity, DataType.CITY);
                 addressRepositoryGenerator.setData(Address::setCountry, DataType.COUNTRY);
                 addressRepositoryGenerator.setData(Address::setStreet, DataType.ADDRESS);
-                addressRepositoryGenerator.setData(Address::setPostalCode, DataType.ZIP_CODE);
+                //addressRepositoryGenerator.setData(Address::setPostalCode, DataType.ZIP_CODE);
+
                 addressRepository.saveAll(addressRepositoryGenerator.create(10, seed));
+                */
+                Address address1 = new Address();
+                address1.setCity("Tel Aviv");
+                address1.setCountry("Israel");
+                address1.setStreet("Dizingoff 123");
+                addressRepository.save(address1);
+                Address address2 = new Address();
+                address2.setCity("Haifa");
+                address2.setCountry("Israel");
+                address2.setStreet("Horev 10");
+                addressRepository.save(address2);
+                Address address3 = new Address();
+                address3.setCity("Jerusalem");
+                address3.setCountry("Israel");
+                address3.setStreet("Ben Yehuda 20");
+                addressRepository.save(address3);
+
 
             }
-
             if (companyRepository.count() == 0) {
                 logger.info("... generating 3 companies entities...");
                 Random r = new Random(0);
@@ -60,8 +75,9 @@ public class DataGenerator {
                 List<User> users = userRepository.findAll();
                 Company company1 = new Company();
                 company1.setRating(1);
-                company1.setName("medical nail");
-                company1.setAddress(addresses.get(r.nextInt(addresses.size())));
+                company1.setName("Medical nail");
+               // company1.setAddress(addresses.get(r.nextInt(addresses.size())));
+                company1.setAddress(addresses.get(0));
                 company1.setDescription("Manicure and medical pedicure");
                 company1.setMainImageURL("https://stayglam.com/wp-content/uploads/2018/12/Black-and-Pink-Glitter.jpg");
                 company1.setMail("company1@comapny1.com");
@@ -70,7 +86,8 @@ public class DataGenerator {
                 Company company2 = new Company();
                 company2.setRating(3);
                 company2.setName("The beauty of the gel");
-                company2.setAddress(addresses.get(r.nextInt(addresses.size())));
+                //company2.setAddress(addresses.get(r.nextInt(addresses.size())));
+                company2.setAddress(addresses.get(1));
                 company2.setDescription("Gel nail polish, nail construction and manicure");
                 company2.setMainImageURL("https://i.pinimg.com/originals/15/6e/e5/156ee52dcdc2a7555ca2c8714e31b147.jpg");
                 company2.setMail("company2@comapny2.com");
@@ -79,7 +96,8 @@ public class DataGenerator {
                 Company company3 = new Company();
                 company3.setRating(4);
                 company3.setName("Stunning gel");
-                company3.setAddress(addresses.get(r.nextInt(addresses.size())));
+                //company3.setAddress(addresses.get(r.nextInt(addresses.size())));
+                company3.setAddress(addresses.get(2));
                 company3.setDescription("Our services are pedicures, manicures and gel nail polishes");
                 company3.setMainImageURL("https://cdn.shopify.com/s/files/1/0962/4412/products/bluesky-gel-polish-blue-bamboo-neon32-bright-cobalt-neon-solid-cosmetics-finger-nail-916_1024x1024_65a21905-012b-4021-b84a-08bcdeb2f4c8_600x.jpg?v=1614951718");
                 company3.setMail("company3@comapny3.com");
@@ -154,66 +172,15 @@ public class DataGenerator {
                 }
             }
 
-
-          /*  List<Address> addressList = addressRepository.findAll();
-            logger.info("... generating 6 company entities...");
-            if (companyRepository.count() == 0) {
-                Company company1 = new Company("Make my Nail",admin,"https://picsum.photos/200",new Random().nextInt(5) + 1,addressList.get(1));
-                Company company2 = new Company("Aliza Nails",admin,"https://picsum.photos/200",new Random().nextInt(5) + 1,addressList.get(2));
-                Company company3 = new Company("Top-Gel",admin,"https://picsum.photos/200",new Random().nextInt(5) + 1,addressList.get(3));
-                Company company4 = new Company( "Lucky Nails",admin,"https://picsum.photos/200",new Random().nextInt(5) + 1,addressList.get(4));
-                Company company5 = new Company("Polish",admin,"https://picsum.photos/200",new Random().nextInt(5) + 1,addressList.get(5));
-                Company company6 = new Company("My Nails",admin,"https://picsum.photos/200",new Random().nextInt(5) + 1,addressList.get(6));
-                companyRepository.save(company1);
-                companyRepository.save(company2);
-                companyRepository.save(company3);
-                companyRepository.save(company4);
-                companyRepository.save(company5);
-                companyRepository.save(company6);*/
-
-                //                companyRepository.saveAll(
-//
-//                        Stream.of("Make my Nail", "Aliza Nails", "Top-Gel", "Lucky Nails", "Polish", "My Nails")
-//                                    .map(name -> {
-//                                    Company company = new Company();
-//                                    company.setName(name);
-//                                    company.setAdmin(admin);
-//                                    company.setMainImageURL("https://picsum.photos/200");
-//                                    company.setRating(new Random().nextInt(5) + 1);
-//                                    company.setAddress(addressList.get(new Random().nextInt(5) + 1));
-//                                    return company;
-//                                }).collect(Collectors.toList()));
-//            }
-            //logger.info("... generating 7 services entities...");
-
-//            List<Company> companyList = companyRepository.findAll();
-
-          /*  if (serviceRepository.count() == 0) {
-                TypeService typeService1 = new TypeService("Polish", 40, 15, (Integer) companyList.get(0).getId(), companyList.get(0));
-                TypeService typeService2 = new TypeService("manicure gel", 120, 70, (Integer) companyList.get(0).getId(), companyList.get(0));
-                TypeService typeService3 = new TypeService("medical manicure", 230, 90, (Integer) companyList.get(1).getId(), companyList.get(1));
-                TypeService typeService4 = new TypeService("manicure gel", 130, 70, (Integer) companyList.get(2).getId(), companyList.get(2));
-                TypeService typeService5 = new TypeService("medical manicure", 220, 90, (Integer) companyList.get(2).getId(), companyList.get(2));
-                TypeService typeService6 = new TypeService("Polish", 30, 15, (Integer) companyList.get(1).getId(), companyList.get(1));
-                TypeService typeService7 = new TypeService("Polish", 50, 15, (Integer) companyList.get(2).getId(), companyList.get(2));
-                serviceRepository.save(typeService1);
-                serviceRepository.save(typeService2);
-                serviceRepository.save(typeService3);
-                serviceRepository.save(typeService4);
-                serviceRepository.save(typeService5);
-                serviceRepository.save(typeService6);
-                serviceRepository.save(typeService7);
-            }*/
-
            logger.info("... generating 7 bookings entities...");
             List<Company> companyList = companyRepository.findAll();
-            Booking booking1 = new Booking(companyList.get(0),user,LocalDateTime.now().plusDays(2).plusHours(4));
-            Booking booking2 = new Booking(companyList.get(0),admin1,LocalDateTime.now().plusDays(3).plusHours(4));
-            Booking booking3 = new Booking(companyList.get(1),user,LocalDateTime.now().plusDays(4).plusHours(4));
-            Booking booking4 = new Booking(companyList.get(1),admin2,LocalDateTime.now().plusDays(5).plusHours(4));
-            Booking booking5 = new Booking(companyList.get(2),user,LocalDateTime.now().plusDays(6).plusHours(4));
-            Booking booking6 = new Booking(companyList.get(2),admin2,LocalDateTime.now().plusDays(7).plusHours(4));
-            Booking booking7 = new Booking(companyList.get(2),user,LocalDateTime.now().plusDays(10).plusHours(4));
+            Booking booking1 = new Booking(companyList.get(0),user, LocalDate.now().atTime(10,0,0,0).plusDays(4));
+            Booking booking2 = new Booking(companyList.get(0),admin1,LocalDate.now().atTime(11,0,0,0).plusDays(7));
+            Booking booking3 = new Booking(companyList.get(1),user,LocalDate.now().atTime(12,0,0,0).plusDays(6));
+            Booking booking4 = new Booking(companyList.get(1),admin2,LocalDate.now().atTime(13,0,0,0).plusDays(4));
+            Booking booking5 = new Booking(companyList.get(2),user,LocalDate.now().atTime(14,0,0,0).plusDays(5));
+            Booking booking6 = new Booking(companyList.get(2),admin2,LocalDate.now().atTime(15,0,0,0).plusDays(6));
+            Booking booking7 = new Booking(companyList.get(2),user,LocalDate.now().atTime(16,0,0,0).plusDays(7));
             bookingRepository.save(booking1);
             bookingRepository.save(booking2);
             bookingRepository.save(booking3);

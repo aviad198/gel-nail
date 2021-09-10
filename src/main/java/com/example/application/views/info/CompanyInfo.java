@@ -16,9 +16,6 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.FileBuffer;
-import com.vaadin.flow.component.upload.receivers.FileData;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -37,13 +34,8 @@ public class CompanyInfo extends VerticalLayout implements BeforeEnterObserver {
     private TextField companyName = new TextField("Company name");
     private TextField companyEmail = new TextField("Email address");
     private TextField  street = new TextField("Street address");
-    private TextField  city = new TextField("Citys");
+    private TextField  city = new TextField("City");
     private TextField  country = new TextField("Country");
-    private String mainImageURL;
-
-    FileBuffer buffer = new FileBuffer();
-    Upload upload = new Upload(buffer);
-    String absolutePath;
 
 
     private TextField description = new TextField("Description");
@@ -57,7 +49,6 @@ public class CompanyInfo extends VerticalLayout implements BeforeEnterObserver {
         setSizeFull();
         add(createTitle());
         configure();
-        createSimpleUpload();
         add(createFormLayout());
         add(createButtonLayout());
         save.addClickListener(e -> saveInfo());
@@ -90,15 +81,13 @@ public class CompanyInfo extends VerticalLayout implements BeforeEnterObserver {
         city.setValue(address.getCity());
         street.setValue(address.getStreet());
         country.setValue(address.getCountry());
-        mainImageURL = company.getMainImageURL();
 
-        formLayout.add(companyName, companyEmail, description, city, street, country, upload);
+        formLayout.add(companyName, companyEmail, description, city, street, country);
         return formLayout;
     }
     private void saveInfo() {
         company.setName(companyName.getValue());
         company.setDescription(description.getValue());
-        company.setMainImageURL(mainImageURL);
         companyService.update(company);
 
         address.setCity(city.getValue());
@@ -115,20 +104,4 @@ public class CompanyInfo extends VerticalLayout implements BeforeEnterObserver {
         }
     }
 
-    private void createSimpleUpload() {
-
-       // upload.setAcceptedFileTypes("application/pdf", ".pdf");
-        upload.addSucceededListener(event -> {
-            // Get information about the file that was written to the file system
-            FileData savedFileData = buffer.getFileData();
-            //absolutePath = savedFileData.getFile().toURI();
-            System.out.println("" +savedFileData.getFile().toURI()+"");
-            System.out.println(absolutePath);
-            System.out.println(savedFileData.getFile().toURI().getPath());
-            System.out.println(savedFileData.getFile().getName());
-            mainImageURL= "" +savedFileData.getFile().toURI()+"";
-        });
-        add(upload);
-
-    }
 }

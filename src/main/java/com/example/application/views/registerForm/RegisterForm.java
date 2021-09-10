@@ -21,7 +21,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -74,23 +73,11 @@ public class RegisterForm extends VerticalLayout {
      * fields for new company
      */
     private TextField  companyName = new TextField("Company name");
-
-    private NumberField phone = new NumberField("Phone number");
-
     private EmailField companyEmail = new EmailField("Email address");
-
     private TextField  street = new TextField("Street address");
     private TextField  city = new TextField("City");
     private TextField  country = new TextField("Country");
-/*
-    private ComboBox<String>  street = new ComboBox<>("Street address");
-
-    private ComboBox<String> city = new ComboBox<>("City");
-
-    private ComboBox<String>   country = new ComboBox<>("Country");
-*/
     private TextField description = new TextField("Description");
-
     private CompanyService companyService;
     private AddressService addressService;
 

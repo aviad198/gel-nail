@@ -22,6 +22,7 @@ public class Company extends AbstractEntity {
     private String mail ;
 
     private String mainImageURL = "https://picsum.photos/200";
+
     private int rating = 0 ;
 
     private String description;
@@ -43,10 +44,7 @@ public class Company extends AbstractEntity {
     private List<Booking> bookings = new LinkedList<>();
 
 
-   // public List<Contact> getEmployees() {return employees;}
-
-
-    public String getName() {
+      public String getName() {
         return name;
     }
 

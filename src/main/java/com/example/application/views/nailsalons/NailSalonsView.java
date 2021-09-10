@@ -1,7 +1,6 @@
 package com.example.application.views.nailsalons;
 
 import com.example.application.data.entity.Company;
-import com.example.application.data.entity.TypeService;
 import com.example.application.data.service.AddressService;
 import com.example.application.data.service.CompanyService;
 import com.example.application.views.MainLayout;
@@ -9,7 +8,6 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -40,7 +38,6 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private Select<String> sortBy;
     private TextField location = new TextField();
     private TextField businessName = new TextField();
-    private ComboBox<TypeService> services = new ComboBox<>();
     private Button startSearch = new Button("Search");
     private CompanyService companyService;
     private AddressService addressService;
@@ -55,11 +52,12 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         addClassNames("nail-salons-view", "flex", "flex-col", "h-full");
         //configure sort
         sortBy.setItems("Popularity", "a-z", "z-a");
-        //sortBy.setValue("Popularity");
+        sortBy.setValue("Popularity");
         sortBy.addValueChangeListener(e -> updateBySort(e.getValue()));
 
         configureFilter();
         add(configureLayout());
+
     }
 
     private VerticalLayout configureLayout(){
@@ -67,13 +65,11 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         HorizontalLayout layoutSearch = new HorizontalLayout();
         layoutSearch.add(businessName, location, startSearch);
         layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
-        layout.add(layoutSearch);
-
         companyList = companyService.findAll();
         imageGrid = new ImageGrid(companyList);
-        layout.add(imageGrid);
-        layout.setWidthFull();
-
+        updateBySort(sortBy.getValue());
+        layout.setSizeFull();
+        layout.add(layoutSearch,imageGrid);
         return layout;
     }
 
@@ -82,12 +78,12 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
         location.setPlaceholder("Where?...");
         location.setClearButtonVisible(true);
         location.setValueChangeMode(ValueChangeMode.LAZY);
-        location.addValueChangeListener(e->updateList());
+       // location.addValueChangeListener(e->updateList());
 
         businessName.setLabel("Business name");
         businessName.setClearButtonVisible(true);
         businessName.setValueChangeMode(ValueChangeMode.LAZY);
-        businessName.addValueChangeListener(e->updateList());
+        //businessName.addValueChangeListener(e->updateList());
 
         startSearch.addClickListener(e ->updateList());
     }
@@ -101,7 +97,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
 
     private void updateBySort(String s) {
         List<Company> tempList;
-        switch(s == null? "a-z" : s) {
+        switch(s == null? "Popularity" : s) {
             case "a-z":
                 tempList = companyService.findAllSortByNameAZ();
                 break;

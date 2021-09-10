@@ -29,4 +29,15 @@ public class ImageGrid extends VerticalLayout {
                         CompanyView.class,
                         new RouteParameters("companyID", String.valueOf(id))));
     }
+    /*
+    public void UpdateGrid(List<Company> companyList) {
+        removeAll();
+        for(Company company : companyList){
+            ImageCard item = new ImageCard(company.getName(),company.getMainImageURL(),company.getNameImage(),company.getDescription(),company.getAddress(),company.getRating());
+            item.getElement().addEventListener("click", e -> openCompany(company.getId()));
+            add(item);
+        }
+    }
+
+     */
 }

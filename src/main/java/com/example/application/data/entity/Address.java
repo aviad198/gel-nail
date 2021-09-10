@@ -1,14 +1,13 @@
 package com.example.application.data.entity;
 
-import javax.persistence.*;
+import com.example.application.data.AbstractEntity;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import com.example.application.data.AbstractEntity;
-import com.vaadin.flow.component.textfield.TextField;
-
-import java.util.LinkedList;
-import java.util.List;
 
 @Entity
 public class Address extends AbstractEntity {
@@ -18,14 +17,14 @@ public class Address extends AbstractEntity {
     private String street = "";
 
 
-    private String postalCode = "";
+    //private String postalCode = "";
 
     @NotNull
     @NotEmpty
     private String city = "";
 
 
-    private String state ="";
+    //private String state ="";
 
     @NotNull
     @NotEmpty
@@ -37,30 +36,33 @@ public class Address extends AbstractEntity {
     private Company company;
 
 
-
     public String getStreet() {
         return street;
     }
     public void setStreet(String street) {
         this.street = street;
     }
+    /*
     public String getPostalCode() {
         return postalCode;
     }
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
-    public String getCity() {
-        return city;
-    }
-    public void setCity(String city) {
-        this.city = city;
-    }
+
+
     public String getState() {
         return state;
     }
     public void setState(String state) {
         this.state = state;
+    }
+    */
+    public String getCity() {
+        return city;
+    }
+    public void setCity(String city) {
+        this.city = city;
     }
     public String getCountry() {
         return country;

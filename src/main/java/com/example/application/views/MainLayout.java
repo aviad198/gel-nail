@@ -3,8 +3,8 @@ package com.example.application.views;
 import com.example.application.data.Role;
 import com.example.application.data.entity.User;
 import com.example.application.security.AuthenticatedUser;
+import com.example.application.views.booking.CompanyBookingView;
 import com.example.application.views.booking.UserBookingView;
-import com.example.application.views.companyarea.CompanyBookingView;
 import com.example.application.views.info.CompanyInfo;
 import com.example.application.views.info.UserInfo;
 import com.example.application.views.nailsalons.NailSalonsView;
@@ -99,17 +99,13 @@ public class MainLayout extends AppLayout {
             avatar.addClassNames("ms-auto", "me-m");
             ContextMenu userMenu = new ContextMenu(avatar);
             userMenu.setOpenOnClick(true);
-            userMenu.addItem("Your profile",e ->{openCProfile();});
-            userMenu.addItem("Your booking", e ->{openBooking();});
+            userMenu.addItem("Your profile",e -> openCProfile());
+            userMenu.addItem("Your booking", e -> openBooking());
             if (maybeUser.get().getRoles().contains(Role.ADMIN)) {
-                userMenu.addItem("Company profile", e -> {
-                    openCompanyProfile();
-                });
-                userMenu.addItem("Company Booking", e -> {
-                    openCompanyBooking();
-                });
+                userMenu.addItem("Company profile", e -> openCompanyProfile());
+                userMenu.addItem("Company Booking", e -> openCompanyBooking());
             }
-            userMenu.addItem("Logout", e -> {authenticatedUser.logout();});
+            userMenu.addItem("Logout", e -> authenticatedUser.logout());
             layout.add(avatar);
         } else {
             Anchor loginLink = new Anchor("login", "Sign in");
@@ -154,29 +150,13 @@ public class MainLayout extends AppLayout {
 
     private List<Tab> createMenuItems() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
-                new MenuItemInfo("Nail Salons", "la la-th-list", NailSalonsView.class), //
-
-             //   new MenuItemInfo("Map", "la la-map", MapView.class), //
-
-             //   new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
-
-              //  new MenuItemInfo("Address Form", "la la-map-marker", AddressFormView.class), //
-
-             //   new MenuItemInfo("Credit Card Form", "", CreditCardFormView.class), //
-
-             //   new MenuItemInfo("Cares", "la la-columns", CompanyView.class), //
-
-             //   new MenuItemInfo("Checkout Form", "", CheckoutFormView.class), //
-
-             //   new MenuItemInfo("Dashboard", "la la-chart-area", DashboardView.class), //
-
+                new MenuItemInfo("Nail Salons", "la la-th-list", NailSalonsView.class),
         };
         List<Tab> tabs = new ArrayList<>();
         for (MenuItemInfo menuItemInfo : menuItems) {
             if (accessChecker.hasAccess(menuItemInfo.getView())) {
                 tabs.add(createTab(menuItemInfo));
             }
-
         }
         return tabs;
     }
@@ -218,7 +198,6 @@ public class MainLayout extends AppLayout {
     private void openCompanyProfile() {
         getUI().ifPresent(ui -> ui.navigate(CompanyInfo.class));
     }
-
     private void openCProfile() {
         getUI().ifPresent(ui -> ui.navigate(UserInfo.class));
     }
