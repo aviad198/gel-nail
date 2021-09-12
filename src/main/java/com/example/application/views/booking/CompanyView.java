@@ -36,7 +36,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
     private final String COMPANY_ID = "companyID";
     private final String COMPANY_EDIT_ROUTE_TEMPLATE = "Company/%d/edit";
 
-    //private Upload image;
+
     private Image companyImage;
 
     private ScheduleDialog scheduleDialog;
@@ -72,9 +72,7 @@ public class CompanyView extends Div implements BeforeEnterObserver {
 
         // Create UI
         verticalLayout = new VerticalLayout();
-
         createHeader(verticalLayout);
-
 
         //wrapper for sced
         //TODO user nicer use of object
@@ -83,18 +81,11 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         wrapper.setWidthFull();
 
         today = LocalDate.now().atTime(7, 0);
-
-
         verticalLayout.add(wrapper);
-
-
         add(verticalLayout);
-
 
         // Configure Form
         binder = new BeanValidationBinder<>(Company.class);
-
-
     }
 
     private void createHeader(VerticalLayout verticalLayout) {
@@ -129,47 +120,6 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         companyImage.setVisible(true);
         companyName.setText(company.getName());
     }
-
-
-/*    private void createEditorLayout(SplitLayout splitLayout) {
-        Div editorLayoutDiv = new Div();
-        editorLayoutDiv.setClassName("flex flex-col");
-        editorLayoutDiv.setWidth("400px");
-
-        Div editorDiv = new Div();
-        editorDiv.setClassName("p-l flex-grow");
-        editorLayoutDiv.add(editorDiv);
-
-        FormLayout formLayout = new FormLayout();
-        Label imageLabel = new Label("Image");
-        imagePreview = new Image();
-        imagePreview.setWidth("100%");
-        image = new Upload();
-        image.getStyle().set("box-sizing", "border-box");
-        image.getElement().appendChild(imagePreview.getElement());
-        name = new TextField("Name");
-        eanCode = new TextField("Ean Code");
-        Component[] fields = new Component[]{imageLabel, image, name, eanCode};
-
-        for (Component field : fields) {
-            ((HasStyle) field).addClassName("full-width");
-        }
-        formLayout.add(fields);
-        editorDiv.add(formLayout);
-        createButtonLayout(editorLayoutDiv);
-
-        splitLayout.addToSecondary(editorLayoutDiv);
-    }*/
-
-/*    private void createButtonLayout(Div editorLayoutDiv) {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setClassName("w-full flex-wrap bg-contrast-5 py-s px-l");
-        buttonLayout.setSpacing(true);
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(save, cancel);
-        editorLayoutDiv.add(buttonLayout);
-    }*/
 
     private void createScheduleLayout() {
 
@@ -228,24 +178,6 @@ public class CompanyView extends Div implements BeforeEnterObserver {
         wrapper.removeAll();
         createScheduleLayout();
     }
-
-   /* private void attachImageUpload(Upload upload, Image preview) {
-        ByteArrayOutputStream uploadBuffer = new ByteArrayOutputStream();
-        upload.setAcceptedFileTypes("image/*");
-        upload.setReceiver((fileName, mimeType) -> {
-            return uploadBuffer;
-        });
-        upload.addSucceededListener(e -> {
-            String mimeType = e.getMIMEType();
-            String base64ImageData = Base64.getEncoder().encodeToString(uploadBuffer.toByteArray());
-            String dataUrl = "data:" + mimeType + ";base64,"
-                    + UriUtils.encodeQuery(base64ImageData, StandardCharsets.UTF_8);
-            upload.getElement().setPropertyJson("files", Json.createArray());
-            preview.setSrc(dataUrl);
-            uploadBuffer.reset();
-        });
-        preview.setVisible(false);
-    }*/
 
     private void clearForm() {
         populatePage(null);

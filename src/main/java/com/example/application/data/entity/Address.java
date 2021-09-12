@@ -16,15 +16,9 @@ public class Address extends AbstractEntity {
     @NotEmpty
     private String street = "";
 
-
-    //private String postalCode = "";
-
     @NotNull
     @NotEmpty
     private String city = "";
-
-
-    //private String state ="";
 
     @NotNull
     @NotEmpty
@@ -42,22 +36,6 @@ public class Address extends AbstractEntity {
     public void setStreet(String street) {
         this.street = street;
     }
-    /*
-    public String getPostalCode() {
-        return postalCode;
-    }
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-
-    public String getState() {
-        return state;
-    }
-    public void setState(String state) {
-        this.state = state;
-    }
-    */
     public String getCity() {
         return city;
     }
@@ -82,6 +60,5 @@ public class Address extends AbstractEntity {
     public String toString() {
         return street + ", " + city + ", "+ country;
     }
-
 
 }

@@ -37,10 +37,13 @@ public class companyGrid extends VerticalLayout {
         grid.removeColumnByKey("admin");
         grid.removeColumnByKey("address");
         grid.setColumns("name", "rating", "description");
+
         grid.addColumn(company -> {
             User user = company.getAdmin();
             return user == null ? "-" : user.getFirstName() + " " + user.getLastName();
         }).setHeader("Admin");
+
+
         grid.addColumn(company -> {
             Address address = company.getAddress();
             return address == null ? "-" : address.toString();

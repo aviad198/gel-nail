@@ -39,6 +39,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private TextField location = new TextField();
     private TextField businessName = new TextField();
     private Button startSearch = new Button("Search");
+    private Button startClear = new Button("Clear");
     private CompanyService companyService;
     private AddressService addressService;
     private ImageGrid imageGrid;
@@ -63,7 +64,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private VerticalLayout configureLayout(){
         VerticalLayout layout = new VerticalLayout();
         HorizontalLayout layoutSearch = new HorizontalLayout();
-        layoutSearch.add(businessName, location, startSearch);
+        layoutSearch.add(businessName, location, startSearch, startClear);
         layoutSearch.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
         companyList = companyService.findAll();
         imageGrid = new ImageGrid(companyList);
@@ -76,18 +77,20 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
     private void configureFilter() {
         location.setLabel("Location");
         location.setPlaceholder("Where?...");
-        location.setClearButtonVisible(true);
         location.setValueChangeMode(ValueChangeMode.LAZY);
-       // location.addValueChangeListener(e->updateList());
 
         businessName.setLabel("Business name");
-        businessName.setClearButtonVisible(true);
+        businessName.setPlaceholder("Name?...");
         businessName.setValueChangeMode(ValueChangeMode.LAZY);
-        //businessName.addValueChangeListener(e->updateList());
 
         startSearch.addClickListener(e ->updateList());
+        startClear.addClickListener(e -> clearList());
     }
-
+    private void clearList(){
+        location.clear();
+        businessName.clear();
+        updateList();
+    }
     private void updateList() {
         companyList = union(companyService.findAll(businessName.getValue()),companyService.findByAddress(location.getValue()));
         companyList = union(updateBySort2(sortBy.getValue()),companyList);
@@ -125,6 +128,7 @@ public class NailSalonsView extends LitTemplate implements HasComponents, HasSty
                 return companyService.findAll();
         }
     }
+
     private List<Company> union(List<Company> list1,  List<Company> list2){
 
         List<Company> listA = new LinkedList<>(list1);

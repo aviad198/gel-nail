@@ -148,7 +148,7 @@ public class RegisterForm extends VerticalLayout {
             user.setRoles(Collections.singleton(Role.USER));
 
             //set profile picture - TO-DO change profile picture
-            user.setProfilePictureUrl("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=128&h=128&q=80");
+            user.setProfilePictureUrl("https://cdn.pixabay.com/photo/2017/06/13/12/53/profile-2398782_1280.png");
 
             if (userTypeCB.getValue()) {
                 Address address = new Address();
@@ -281,17 +281,7 @@ public class RegisterForm extends VerticalLayout {
     private Component createAddressLayout() {
         FormLayout addressForm = new FormLayout();
         addressBinder = new BeanValidationBinder<>(Address.class);
-/*
-        street.setItems("HaYasmin", "Shalom", "Ben Guiron", "Malikshoa");
-        street.addCustomValueSetListener(
-                event -> street.setValue(event.getDetail()));
-        city.setItems("Jerusalem", "New-York", "Tel-Aviv", "New-Delhi");
-        city.addCustomValueSetListener(
-                event -> city.setValue(event.getDetail()));
-        country.setItems("Israel", "United States", "India");
-        country.addCustomValueSetListener(
-                event -> country.setValue(event.getDetail()));
-*/
+
         street.setRequired(true);
         city.setRequired(true);
         country.setRequired(true);
