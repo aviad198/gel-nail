@@ -177,6 +177,10 @@ public class RegisterForm extends VerticalLayout {
 
             getUI().ifPresent(ui -> ui.navigate(LoginView.class));
         } catch (ValidationException e1) {
+            if (userTypeCB.getValue()) {
+                addressBinder.validate();
+                companyBinder.validate();
+            }
             // validation errors are already visible for each field,
             // and bean-level errors are shown in the status label.
 
@@ -235,9 +239,19 @@ public class RegisterForm extends VerticalLayout {
         return ValidationResult.ok();
     }
 
-    private void clearForm() {
+    private ValidationResult bEmailUniqueness(String mail, ValueContext valueContext) {
+        if (companyService.findByMail(mail) != null) {
+            return ValidationResult.error("This mail is already registered");
+        }
+        return ValidationResult.ok();
+    }
 
+    private void clearForm() {
         userBinder.setBean(new User());
+        if (userTypeCB.getValue()) {
+            addressBinder.setBean(new Address());
+            companyBinder.setBean(new Company());
+        }
     }
 
     private Component createTitle() {
@@ -272,8 +286,8 @@ public class RegisterForm extends VerticalLayout {
         companyForm.add(companyName, companyEmail, description);
 
         companyBinder.forField(companyName).bind("name");
-        companyBinder.forField(companyEmail).bind("mail");
         companyBinder.forField(description).bind("description");
+        companyBinder.forField(companyEmail).withValidator(this::bEmailUniqueness).bind("mail");
 
         return companyForm;
     }
