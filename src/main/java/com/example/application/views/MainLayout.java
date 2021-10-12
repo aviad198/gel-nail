@@ -99,7 +99,7 @@ public class MainLayout extends AppLayout {
             avatar.addClassNames("ms-auto", "me-m");
             ContextMenu userMenu = new ContextMenu(avatar);
             userMenu.setOpenOnClick(true);
-            userMenu.addItem("Your Profile",e -> openCProfile());
+            userMenu.addItem("Your Profile",e -> openProfile());
             userMenu.addItem("Your Booking", e -> openBooking());
             if (maybeUser.get().getRoles().contains(Role.ADMIN)) {
                 userMenu.addItem("Company Profile", e -> openCompanyProfile());
@@ -198,7 +198,7 @@ public class MainLayout extends AppLayout {
     private void openCompanyProfile() {
         getUI().ifPresent(ui -> ui.navigate(CompanyInfo.class));
     }
-    private void openCProfile() {
+    private void openProfile() {
         getUI().ifPresent(ui -> ui.navigate(UserInfo.class));
     }
     private void openCompanyBooking() {
