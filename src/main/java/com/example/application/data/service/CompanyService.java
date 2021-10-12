@@ -1,6 +1,7 @@
 package com.example.application.data.service;
 
 import com.example.application.data.entity.Company;
+import com.example.application.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
@@ -49,6 +50,9 @@ public class CompanyService extends CrudService<Company,Integer> {
         } else {
             return companyRepository.searchByAddress(stringFilter);
         }
+    }
+    public Company findByMail(String mail) {
+        return companyRepository.findByMail(mail);
     }
 }
 
