@@ -27,8 +27,8 @@ public class DataGenerator {
                                       UserRepository userRepository,
                                       CompanyRepository companyRepository,
                                       BookingRepository bookingRepository,
-                                      AddressRepository addressRepository,
-                                      AddressService addressService) {
+                                      AddressRepository addressRepository
+                                     ) {
         return args -> {
             Logger logger = LoggerFactory.getLogger(getClass());
 
