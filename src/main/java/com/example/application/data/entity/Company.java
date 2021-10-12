@@ -27,10 +27,6 @@ public class Company extends AbstractEntity {
 
     private String description;
 
-    //to remove
-  //  @OneToMany(mappedBy = "company")
-   // private List<Contact> employees = new LinkedList<>();
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private User admin;
@@ -44,7 +40,7 @@ public class Company extends AbstractEntity {
     private List<Booking> bookings = new LinkedList<>();
 
 
-      public String getName() {
+    public String getName() {
         return name;
     }
 
