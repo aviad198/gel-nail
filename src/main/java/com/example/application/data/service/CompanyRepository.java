@@ -1,6 +1,7 @@
 package com.example.application.data.service;
 
 import com.example.application.data.entity.Company;
+import com.example.application.data.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +29,7 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
             "or lower(c.address.country) like lower(concat('%', :searchTerm, '%')) " +
             "or lower(c.address.street) like lower(concat('%', :searchTerm, '%'))")
     List<Company> searchByAddress(@Param("searchTerm")String addressVal);
+
+    Company findByMail(String mail);
+
 }
